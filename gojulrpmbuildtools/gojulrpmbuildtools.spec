@@ -37,6 +37,7 @@ make install DESTDIR=%{buildroot}
 
 
 %files
+%defattr(-,root,root,-)
 %doc
 /usr/bin/*
 /etc/rpm/*
