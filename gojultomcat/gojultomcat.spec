@@ -29,5 +29,6 @@ cd %{buildroot}/%{_gojulinstalldir}
 tar zxf %{_builddir}/%{name}-%{version}/tomcat-distrib.tgz --strip-components 1
 
 %files
+%defattr(-,root,root,-)
 %{_gojulinstalldir}
 
