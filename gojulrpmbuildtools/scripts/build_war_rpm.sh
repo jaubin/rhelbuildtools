@@ -26,6 +26,17 @@ usage()
 EOF
 }
 
+infoLog()
+{
+   echo >&2 "$1"
+}
+
+exitWithError()
+{
+   echo >&2 "$1"
+   exit $2
+}
+
 # Find all the WAR files under the current directory
 # RETURNS
 # - the list of WAR files under the current directory
@@ -34,10 +45,17 @@ findWars()
    find . -name "*.war"
 }
 
-# Return the RPM working directory.
+# Return the RPM work directory.
+# RETURNS
+# - the RPM work directory
 getRpmWorkDir()
 {
    echo "$(pwd)/target/rpmwork"
+}
+
+getRpmWorkSourceDir()
+{
+   echo "$(getRpmWorkDir)/SOURCES"
 }
 
 # Create the RPM work directory layout.
@@ -54,13 +72,57 @@ createTargetDirectoryLayout()
   done
 }
 
-# Copy files to the RPM directory structure
+# Return the WAR name without extension of the WAR file
+# given as a parameter.
+# PARAMS :
+# - warFile : the war file path.
+# RETURNS :
+# - the war name corresponding to warFile
+getWarName()
+{
+  local warFile="$1"
+  local res=$(basename $warFile ".war")
+  [[ -z "$res" ]] && exitWithError "War file $warFile does not seem to be a valid WAR" 1
+  echo $res
+}
+
+# Extract the WAR version from the pom.xml
+# in the current directory
+getWarVersion()
+{
+  mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec 
+}
+
+# Prepare the RPM spec file which corresponds
+# to the WAR file passed as a parameter.
+# PARAMS :
+# - warFileName : the WAR file name.
+prepareSpecFile()
+{
+  local warFileName="$@"
+  local warName=$(getWarName $warFileName)
+  local targetSpecFile="$(getRpmWorkDir)/SPECS/${warName}.spec"
+
+  cp $WAR_RPM_TEMPLATES/war_spec_file_template.spec $targetSpecFile
+
+  sed -i "s/@@WARNAME@@/$warName/g" $targetSpecFile
+  sed -i "s/@@WARVERSION@@/$(getWarVersion)/g" $targetSpecFile
+}
+
+# Create directory structure and copy files to the RPM directory structure
 # PARAMS :
 # - warName : the WAR file name with its path
-copyRpmBuildFiles()
+createDirectoriesAndRpmBuildFiles()
 {
    local warFileName="$1"
 
    createTargetDirectoryLayout
+   prepareSpecFile "$warFileName"
 }
 
+rm -rf $(getRpmWorkDir)
+
+for i in $(findWars)
+do
+   createDirectoriesAndRpmBuildFiles $i
+done
