@@ -109,6 +109,47 @@ prepareSpecFile()
   sed -i "s/@@WARVERSION@@/$(getWarVersion)/g" $targetSpecFile
 }
 
+
+# Return the configApps work directory
+# PARAMS :
+# - the WAR file name
+# RETURNS :
+# - the configApps source directory
+getConfigAppsDir()
+{
+  local warFile="$1"
+  local warName=$(getWarName "$warFile")
+
+  echo "$(getRpmWorkSourceDir)/configApps/$warName"
+}
+
+# Prepare the configApps directory for WAR file
+# warFile
+# PARAMS :
+# - the WAR file name
+prepareConfigApps()
+{
+   local warFile="$1"
+   local targetConfigAppsDir=$(getConfigAppsDir "$warFile")
+
+   
+
+}
+
+# Copy the context.xml template file to the 
+# target sources directory and customize it.
+copyContextXml()
+{
+   local warFileName="$1"
+   local warName=$(getWarName "$warFileName")
+
+   local targetFileName="$(getRpmWorkSourceDir)/${warName}.xml"
+
+   cp $WAR_RPM_TEMPLATES/context_template.xml $targetFileName
+   sed -i "s/@@WARNAME@@/$warName/g" $targetFileName
+
+}
+
 # Create directory structure and copy files to the RPM directory structure
 # PARAMS :
 # - warName : the WAR file name with its path
@@ -118,6 +159,11 @@ createDirectoriesAndRpmBuildFiles()
 
    createTargetDirectoryLayout
    prepareSpecFile "$warFileName"
+
+   cp $warFileName $(getRpmWorkSourceDir)
+
+   prepareConfigApps "$warFileName"
+   copyContextXml "$warFileName"
 }
 
 rm -rf $(getRpmWorkDir)
