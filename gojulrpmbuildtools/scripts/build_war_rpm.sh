@@ -123,6 +123,25 @@ getConfigAppsDir()
   echo "$(getRpmWorkSourceDir)/configApps/$warName"
 }
 
+# Copy the default logback.xml
+# if necessary, i.e. if the app
+# does not already defines another one.
+# PARAMS :
+# - the WAR file name
+copyLogConfigIfNecessary()
+{
+   local warFile="$1"
+   local configAppsDir=$(getConfigAppsDir "$warFile")
+   local targetLogConfig="${configAppsDir}/logback.xml"
+
+   if [ ! -f $targetLogConfig ]
+   then
+      local warName=$(getWarName "$warFile")
+      cp $WAR_RPM_TEMPLATES/logback_template.xml $targetLogConfig
+      sed -i "s/@@WARNAME@@/$warName/g" $targetLogConfig
+   fi
+}
+
 # Prepare the configApps directory for WAR file
 # warFile
 # PARAMS :
@@ -130,10 +149,21 @@ getConfigAppsDir()
 prepareConfigApps()
 {
    local warFile="$1"
-   local targetConfigAppsDir=$(getConfigAppsDir "$warFile")
+   local warName="$(getWarName $warFile)"
+ 
+   local sourceConfigAppsDir="$(dirname $warFile)/../src/main/configApps/$warName"
+   local globalTargetConfigAppsDir="$(getRpmWorkSourceDir)/configApps"
 
-   
+   mkdir -p $globalTargetConfigAppsDir
+ 
+   if [ -d "$sourceConfigAppsDir" ]
+   then
+      cp -r $sourceConfigAppsDir $globalTargetConfigAppsDir
+   else
+      mkdir -p $globalTargetConfigAppsDir/$warName
+   fi
 
+   copyLogConfigIfNecessary "$warFile"
 }
 
 # Copy the context.xml template file to the 
