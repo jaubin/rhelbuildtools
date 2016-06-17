@@ -2,6 +2,7 @@
 
 SCRIPT_NAME=$(basename $0)
 WAR_RPM_TEMPLATES="/usr/share/gojulrpmbuildtools/war"
+rpmResultDir=$(pwd)/target/rpmResults
 
 set -e
 
@@ -90,7 +91,19 @@ getWarName()
 # in the current directory
 getWarVersion()
 {
-  mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec 
+  mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-/_/g"
+}
+
+# Return the RPM spec file name with
+# its path corresponding to the WAR file
+# warFile
+# PARAMS :
+# - warFile : the war file.
+getSpecFileName()
+{
+  local warFileName="$@"
+  local warName=$(getWarName $warFileName)
+  echo "$(getRpmWorkDir)/SPECS/${warName}.spec"
 }
 
 # Prepare the RPM spec file which corresponds
@@ -101,7 +114,7 @@ prepareSpecFile()
 {
   local warFileName="$@"
   local warName=$(getWarName $warFileName)
-  local targetSpecFile="$(getRpmWorkDir)/SPECS/${warName}.spec"
+  local targetSpecFile=$(getSpecFileName "$warFileName")
 
   cp $WAR_RPM_TEMPLATES/war_spec_file_template.spec $targetSpecFile
 
@@ -215,9 +228,43 @@ createDirectoriesAndRpmBuildFiles()
    prepareArchive "$warFileName"
 }
 
-rm -rf $(getRpmWorkDir)
+# Create a RPM for the WAR file passed as a parameter.
+# PARAMS :
+# - warFile the WAR file for which a RPM must be created
+createRpmForWar()
+{
+   local warFileName="$1"
+   local workDir=$(getRpmWorkDir)
+
+   infoLog "Creating RPM package for file $warFileName"
+
+   createDirectoriesAndRpmBuildFiles "$warFileName"
+   rpmbuild --define "_topdir $workDir" --define "debug_package %{nil}" -ba $(getSpecFileName $warFileName)
+
+   mkdir -p $rpmResultDir || true
+
+   for i in $(find $workDir/RPMS -name "*.rpm")
+   do 
+      cp $i $rpmResultDir
+   done
+
+   infoLog "RPM package create for file $warFileName and available under $rpmResultDir"
+}
+
+if [ "$1" == "-h" ]
+then
+   usage
+   exit 0
+elif [ $# -ne 0 ]
+then
+   infoLog "This script does not take any parameter !"
+   usage
+   exit 1
+fi
+
+rm -rf $(getRpmWorkDir) $rpmResultDir
 
 for i in $(findWars)
 do
-   createDirectoriesAndRpmBuildFiles $i
+   createRpmForWar $i
 done

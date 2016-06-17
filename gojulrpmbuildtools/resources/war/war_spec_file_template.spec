@@ -28,7 +28,7 @@ cp @@WARNAME@@.war %{buildroot}/%{_gojulcatalinabase}/webapps
 cp -r configApps %{buildroot}/%{_gojulcatalinabase} 
 
 mkdir -p %{buildroot}/%{_gojulcatalinabase}/conf/Catalina/localhost
-cp @@WARNAME@@@.xml %{buildroot}/%{_gojulcatalinabase}/conf/Catalina/localhost
+cp @@WARNAME@@.xml %{buildroot}/%{_gojulcatalinabase}/conf/Catalina/localhost
 
 %pre
 if [ -f /etc/init.d/gojultomcat ]
@@ -52,5 +52,5 @@ fi
 %config(noreplace)  %{_gojulcatalinabase}/configApps/@@WARNAME@@/*
 
 %{_gojulcatalinabase}/conf/Catalina/localhost/@@WARNAME@@.xml
-%attr(644,gojultomcat,gojultomcat} %{_gojulcatalinabase}/webapps/@@WARNAME@@.war
+%attr(644,gojultomcat,gojultomcat) %{_gojulcatalinabase}/webapps/@@WARNAME@@.war
 
