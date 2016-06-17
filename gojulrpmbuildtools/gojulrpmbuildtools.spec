@@ -12,6 +12,7 @@ Source0:	gojulrpmbuildtools.tgz
 
 BuildRequires:	cmake
 
+Requires:       apache-maven
 Requires:       /bin/bash
 Requires:	cmake
 Requires:       gcc
