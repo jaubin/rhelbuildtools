@@ -17,7 +17,7 @@ usage()
    Note that this program does not use mock, so it is NOT intended to be used
    by anything which uses a compiler, as the environment may interfere with
    the build process.
-EOF  
+EOF
 }
 
 infoLog()
@@ -58,7 +58,7 @@ getSpecFileDir()
 {
    local specFilePath=$1
 
-   echo "$(pwd)/target/$(getSpecFileDirName $specFilePath))"
+   echo "$(pwd)/target/$(getSpecFileDirName $specFilePath)"
 }
 
 # Create the target directory layout for the RPM spec file to process.
@@ -74,7 +74,7 @@ createTargetDirectoryLayout()
 
   for i in SPECS SOURCES BUILDROOT BUILDDIR RPMS SRPMS
   do
-     mkdir -p $i
+     mkdir -p $specFileDir/$i
   done
 
   cp $specFileName $specFileDir/SPECS
@@ -95,7 +95,7 @@ createArchive()
    local specFileDirName=$(getSpecFileDirName $specFileName) 
 
 
-   tar zcf $specFileDir/SOURCES/$tarFileName $specFileDirName --transform "s/^$specFileDirName/||"
+   tar zcf $specFileDir/SOURCES/$tarFileName $specFileDirName --transform "s|^$specFileDirName/||"
 }
 
 # Create the RPM package
@@ -116,7 +116,11 @@ createRpm()
 
   local resultDir=$(pwd)/target/results
   mkdir -p $resultDir || true
-  cp $specFileDir/RPMS/*.rpm $resultDir
+
+  for i in $(find $resultDir/RPMS/*.rpm -name "*.rpm")
+  do
+     cp $i $resultDir
+  done
 
   infoLog "Package(s) created and available under directory $resultDir" 
 }

@@ -31,7 +31,7 @@ extremely expensive to run on a continuous integration server.
 make
 
 %install
-make install DESTDIR=.
+make install DESTDIR=%{buildroot}
 
 
 %files
