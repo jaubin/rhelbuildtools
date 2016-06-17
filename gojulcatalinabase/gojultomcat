@@ -21,21 +21,29 @@ export CATALINA_HOME=/usr/share/gojultomcat
 export CATALINA_BASE=/home/gojultomcat
 export CATALINA_PID=/var/run/gojultomcat/gojultomcat.pid
 export JAVA_HOME=/usr/lib/jvm/java-openjdk
+export TOMCAT_USER=gojultomcat
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser -s /bin/sh"
+else
+    SU="/bin/su -s /bin/sh"
+fi
 
 
 start() 
 {
-   $CATALINA_HOME/bin/catalina.sh start
+   $SU $TOMCAT_USER $CATALINA_HOME/bin/catalina.sh start
 }
 
 stop()
 {
-   $CATALINA_HOME/bin/catalina.sh stop
+   $SU $TOMCAT_USER $CATALINA_HOME/bin/catalina.sh stop
 }
 
 restart()
 {
-   $CATALINA_HOME/bin/catalina.sh restart
+   $SU $TOMCAT_USER $CATALINA_HOME/bin/catalina.sh restart
 }
 
 usage()
