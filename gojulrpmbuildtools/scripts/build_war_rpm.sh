@@ -180,6 +180,23 @@ copyContextXml()
 
 }
 
+# Prepare the tgz archive which will be the source.
+# PARAMS : 
+# - the war file name
+prepareArchive()
+{
+   local warFile="$1"
+   local warName=$(getWarName "$warFile")
+
+   local curDir=$(pwd)
+   cd $(getRpmWorkSourceDir)
+
+   tar zcf ${warName}.tgz configApps ${warName}.xml ${warName}.war
+   rm -rf configApps ${warName}.xml ${warName}.war
+
+   cd $curDir
+}
+
 # Create directory structure and copy files to the RPM directory structure
 # PARAMS :
 # - warName : the WAR file name with its path
@@ -194,6 +211,8 @@ createDirectoriesAndRpmBuildFiles()
 
    prepareConfigApps "$warFileName"
    copyContextXml "$warFileName"
+
+   prepareArchive "$warFileName"
 }
 
 rm -rf $(getRpmWorkDir)
