@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context>
+
+   <Environment name="logback/context-name" value="@@WARNAME" type="java.lang.String" override="false"/>
+   <Environment name="logback/configuration-resource" value="@@WARNAME@@/logback.xml" type="java.lang.String" override="false"/>
+
+</Context>
