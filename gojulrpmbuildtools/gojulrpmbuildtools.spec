@@ -42,4 +42,4 @@ make install DESTDIR=%{buildroot}
 %doc
 /usr/bin/*
 /etc/rpm/*
-
+/usr/share/gojulrpmbuildtools
