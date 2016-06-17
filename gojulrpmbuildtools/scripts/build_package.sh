@@ -85,6 +85,7 @@ createTargetDirectoryLayout()
 
   cp $specFileName $specFileDir/SPECS
 }
+
 # Return the project version.
 # RETURNS
 # - the project version
