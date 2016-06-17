@@ -112,12 +112,12 @@ createRpm()
 
   local specFileDir=$(getSpecFileDir $specFileName)
  
-  rpmbuild --define "_topdir $specFileDir" -ba $specFileDir/SPECS/$(basename $specFileName)  
+  rpmbuild --define "_topdir $specFileDir" --define "debug_package %{nil}" -ba $specFileDir/SPECS/$(basename $specFileName)  
 
   local resultDir=$(pwd)/target/results
   mkdir -p $resultDir || true
 
-  for i in $(find $resultDir/RPMS/*.rpm -name "*.rpm")
+  for i in $(find $specFileDir/RPMS -name "*.rpm")
   do
      cp $i $resultDir
   done
