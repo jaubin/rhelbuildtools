@@ -78,7 +78,7 @@ createTargetDirectoryLayout()
   rm -rf $specFileDir
   mkdir -p $specFileDir
 
-  for i in SPECS SOURCES BUILDROOT BUILDDIR RPMS SRPMS
+  for i in SPECS SOURCES BUILDROOT BUILD RPMS SRPMS
   do
      mkdir -p $specFileDir/$i
   done
