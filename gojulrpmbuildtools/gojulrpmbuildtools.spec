@@ -1,5 +1,7 @@
+%global project_version %(echo $PROJECT_VERSION) 
+
 Name:	        gojulrpmbuildtools	
-Version:	0.0.1
+Version:        %{project_version} 
 Release:	1%{?dist}
 Summary:	Gojul's tool used to build RPM packages
 

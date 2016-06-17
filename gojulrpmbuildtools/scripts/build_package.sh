@@ -14,9 +14,15 @@ usage()
    spec_file_name must be located in a subdirectory of the current directory.
    The resulting RPM is put under directory $(pwd)/target/results
 
+   This script determines the version of RPM files using a file 
+   project-info.properties which must be located under the current directory.
+   This file is a standard property file which must at least define an entry
+   named "project.version".
+
    Note that this program does not use mock, so it is NOT intended to be used
    by anything which uses a compiler, as the environment may interfere with
    the build process.
+
 EOF
 }
 
@@ -79,6 +85,20 @@ createTargetDirectoryLayout()
 
   cp $specFileName $specFileDir/SPECS
 }
+# Return the project version.
+# RETURNS
+# - the project version
+getProjectVersion()
+{
+   [ -f project-info.properties ] || exitWithError "No project-info.properties found ! Aborting !" 5
+
+   local res=$(grep "project.version=" project-info.properties | cut -d\= -f2)
+
+   [[ -z "$res" ]] && exitWithError "No project.version in project-info.properties found, aborting !" 3
+
+   echo $res
+}
+
 
 # Create the archive to be packaged.
 # PARAMS :
@@ -88,9 +108,11 @@ createArchive()
    local specFileName=$1
    local specFileDir=$(getSpecFileDir "$specFileName")
 
-   local tarFileName=$(spectool -S $specFileName|grep "Source0"|sed -e "s/Source0: //")
+   # spectool needs a project_version property set in order to work
+   # here we put a dummy value to make it happy...
+   local tarFileName=$(PROJECT_VERSION=dummy spectool -S $specFileName|grep "Source0"|sed -e "s/Source0: //")
 
-   [[ -z $tarFileName ]] && exitWithError "No tar file name specified, aborting !", 2
+   [[ -z "$tarFileName" ]] && exitWithError "No tar file name specified, aborting !" 2
 
    local specFileDirName=$(getSpecFileDirName $specFileName) 
 
@@ -105,14 +127,16 @@ createRpm()
 {
   local specFileName="$1"
 
-  infoLog "Creating package(s) for SPEC file $specFileName"
+  local projectVersion=$(getProjectVersion)
+
+  infoLog "Creating package(s) for SPEC file $specFileName with version $projectVersion"
 
   createTargetDirectoryLayout $specFileName
   createArchive $specFileName
 
   local specFileDir=$(getSpecFileDir $specFileName)
  
-  rpmbuild --define "_topdir $specFileDir" --define "debug_package %{nil}" -ba $specFileDir/SPECS/$(basename $specFileName)  
+  PROJECT_VERSION=$projectVersion rpmbuild --define "_topdir $specFileDir" --define "debug_package %{nil}" -ba $specFileDir/SPECS/$(basename $specFileName)  
 
   local resultDir=$(pwd)/target/results
   mkdir -p $resultDir || true
