@@ -13,8 +13,6 @@
 # Short-Description: start and stop tomcat
 ### END INIT INFO
 
-set -e
-
 SCRIPT_NAME=$(basename $0)
 
 export CATALINA_HOME=/usr/share/gojultomcat
@@ -30,6 +28,7 @@ else
     SU="/bin/su -s /bin/sh"
 fi
 
+. /etc/rc.d/init.d/functions
 
 start() 
 {
@@ -46,9 +45,14 @@ restart()
    $SU $TOMCAT_USER $CATALINA_HOME/bin/catalina.sh restart
 }
 
+rh_status()
+{
+   status -p "$CATALINA_PID" gojultomcat
+}
+
 usage()
 {
-   echo >&2 "$SCRIPT_NAME (start|stop|restart)"
+   echo >&2 "$SCRIPT_NAME (start|stop|restart|status)"
 }
 
 case "$1" in
@@ -60,6 +64,9 @@ case "$1" in
       ;;
    restart)
       restart
+      ;;
+   status)
+      rh_status
       ;;
    *)
       usage
