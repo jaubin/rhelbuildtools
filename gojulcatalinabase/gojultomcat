@@ -32,6 +32,7 @@ fi
 
 start() 
 {
+   rm -rf $CATALINA_BASE/temp/* $CATALINA_BASE/work/*
    $SU $TOMCAT_USER $CATALINA_HOME/bin/catalina.sh start
 }
 
