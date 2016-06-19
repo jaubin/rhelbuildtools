@@ -12,6 +12,7 @@ This project also embeds a Tomcat distribution, in order to ease your work when 
 
 * build_packages.sh : looks for all the RPM spec files which are exactly one level under the current directory, and builds the RPM.
 * build_war_rpm.sh : create a RPM for each of the WAR packages located under the current Maven project. A Tomcat distribution with configuration is included in this project so that the whole thing can be easily installed on any RHEL server.
+* publish_rpm.sh : publish a RPM package to the specified Maven repo. This one must be able to behave as a RPM repo. Nexus notably does.
 
 ## Dependency on Maven
 
