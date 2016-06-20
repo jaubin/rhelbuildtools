@@ -13,6 +13,21 @@ This project also embeds a Tomcat distribution, in order to ease your work when 
 * build_packages.sh : looks for all the RPM spec files which are exactly one level under the current directory, and builds the RPM.
 * build_war_rpm.sh : create a RPM for each of the WAR packages located under the current Maven project. A Tomcat distribution with configuration is included in this project so that the whole thing can be easily installed on any RHEL server.
 * publish_rpm.sh : publish a RPM package to the specified Maven repo. This one must be able to behave as a RPM repo. Nexus notably does.
+* create_release.sh : build the RPM packages, tag the SCM, increment the project versions and pushes the built RPM packages to the local maven repo.
+
+Each of these scripts includes a more detailed help. You can display it with the "-h" argument.
+
+## Version management for RPMs
+
+Version management must be done in file package-info.properties which is located at the root of each project. Each of these files has an entry named project.version with a version specified under the form x.y.z where :
+
+* x is the project major version
+* y is the project minor version
+* z is a value incremented for each release
+
+Actually you may have more version digits, but these are the minimum required ones.
+
+The important thing is that the x.y couple must be unique for a given development branch, otherwise when tagging you will have conflicts which may result into unpredictable situations. In other words if your master has a version 2.0 and you create a branch for it, then you should change the version of your master to 2.1 or 3.0 or whatever you want, so that it does not match the version digits of the branch.
 
 ## Dependency on Maven
 
