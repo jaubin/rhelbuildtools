@@ -53,3 +53,9 @@ Then you can happily rebuild all the packages of the repo using command :
 ```bash
 build_packages.sh
 ```
+
+## Available software
+
+Apart from the available build tools, the following software have been packages :
+* Tomcat (directories gojultomcat and gojulcatalinabase) : required because RHEL's official Tomcat is really weirdly packaged.
+* Kafka (directory gojulconfluent) : RHEL RPM packages for Confluent/Kafka. This way, Kafka is cleanly package because as of now, Confluent does not provide clean packages but instead a tar.gz distro. You must first download an official Confluent distro prior to packaging (check instructions in the README file from the gojulconfluent/ subdirectory).

@@ -1,1 +1,1 @@
-In order to make this build recipe work you must download a Confluent distribution, rename it into confluent-distrib.tgz and put it in this directory.
+In order to make this build recipe work you must download a Confluent distribution, rename it into confluent-distrib.tgz and put it in this directory. These script have been tested against Confluent distribution 4.0. They're provided as-is, without any warranty, for the community.
