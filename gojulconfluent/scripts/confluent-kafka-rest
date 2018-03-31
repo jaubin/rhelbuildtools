@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# confluent-kafka-rest         Confluent Kafka Start/Stop/Restart scripts
+# processname: kafka-rest
+# chkconfig: - 82 18
+### BEGIN INIT INFO
+# Provides: kafka-rest
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Description: Confluent kafka-rest
+# Short-Description: start and stop kafka-rest
+### END INIT INFO
+
+SCRIPT_NAME=$(basename $0)
+
+export LOG_DIR=/var/log/confluent-kafka-rest
+export PIDFILE=/var/run/confluent-kafka-rest/confluent-kafka-rest.pid
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export KAFKA_REST_USER=kafka-rest
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser -s /bin/sh"
+else
+    SU="/bin/su -s /bin/sh"
+fi
+
+. /etc/rc.d/init.d/functions
+
+start() 
+{
+   $SU $KAFKA_REST_USER -c "/usr/bin/kafka-rest-start -daemon /etc/kafka-rest/kafka-rest.properties"
+   local pid=$(ps ax | egrep -i "(kafkarest\.Main)|(kafkarest\.KafkaRestMain)" | grep java | grep -v grep | awk '{print $1}')
+   echo $pid > $PIDFILE
+}
+
+stop()
+{
+   $SU $KAFKA_REST_USER /usr/bin/kafka-rest-stop
+   rm -rf /home/${KAFKA_REST_USER}/nohup.out
+   rm -f $PIDFILE
+}
+
+restart()
+{
+   stop
+   start
+}
+
+rh_status()
+{
+   status -p "$PIDFILE" confluent-kafka-rest
+}
+
+usage()
+{
+   echo >&2 "$SCRIPT_NAME (start|stop|restart|status)"
+}
+
+case "$1" in
+   start)
+      start
+      ;;
+   stop)
+      stop
+      ;;
+   restart)
+      restart
+      ;;
+   status)
+      rh_status
+      ;;
+   *)
+      usage
+      exit 1
+      ;;
+esac

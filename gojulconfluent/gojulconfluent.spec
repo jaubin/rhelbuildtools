@@ -112,6 +112,29 @@ Requires: confluent-common
 %description kafka-rest
 Confluent Kafka REST connector.
 
+%pre kafka-rest
+getent passwd kafka-rest > /dev/null || /usr/sbin/useradd kafka-rest
+
+if [ -f /etc/init.d/confluent-kafka-rest ]
+then
+   /etc/init.d/confluent-kafka-rest stop || true
+fi
+
+%post kafka-rest
+if [ "$1" == 0 ]
+then
+   chkconfig --add /etc/init.d/confluent-kafka-rest || true
+fi 
+
+%preun kafka-rest
+if [ "$1" == 0 ]
+then
+   /etc/init.d/confluent-kafka-rest stop || true
+   chkconfig --del /etc/init.d/confluent-kafka-rest || true
+fi 
+
+
+
 #-------------------------------- KAFKA CONNECT ------------------------------------
 
 %package kafka-connect-storage-common
@@ -246,7 +269,7 @@ rm -rf bin/confluent
 mv etc/* %{buildroot}/etc
 rm -rf etc
 
-for i in kafka schema-registry zookeeper; do
+for i in kafka kafka-rest schema-registry zookeeper; do
    mkdir -p %{buildroot}/var/run/confluent-${i}
    mkdir -p %{buildroot}/var/log/confluent-${i}
 done
@@ -320,6 +343,9 @@ done
 %{_datadir}/kafka-rest
 %{_datadir}/doc/kafka-rest
 %{_datadir}/java/kafka-rest
+/etc/init.d/confluent-kafka-rest
+%attr(-,kafka-rest,kafka-rest) /var/log/confluent-kafka-rest
+/var/run/confluent-kafka-rest
 %dir %{_sysconfdir}/kafka-rest
 %config(noreplace) %{_sysconfdir}/kafka-rest/*
 
