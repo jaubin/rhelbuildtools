@@ -64,6 +64,27 @@ Requires: confluent-kafka-libs
 %description kafka-mirror-maker
 Kafka mirror maker
 
+%pre kafka
+getent passwd kafka > /dev/null || /usr/sbin/useradd kafka
+
+if [ -f /etc/init.d/confluent-kafka ]
+then
+   /etc/init.d/confluent-kafka stop || true
+fi
+
+%post kafka
+if [ "$1" == 0 ]
+then
+   chkconfig --add /etc/init.d/confluent-kafka || true
+fi 
+
+%preun kafka
+if [ "$1" == 0 ]
+then
+   /etc/init.d/confluent-kafka stop || true
+   chkconfig --del /etc/init.d/confluent-kafka || true
+fi 
+
 %package kafka-rest
 Summary: Kafka REST connector
 Requires: confluent-common
@@ -140,7 +161,7 @@ getent passwd zookeeper > /dev/null || /usr/sbin/useradd zookeeper
 
 if [ -f /etc/init.d/confluent-zookeeper ]
 then
-   /etc/init.d/confluent-zookeeper stop
+   /etc/init.d/confluent-zookeeper stop || true
 fi
 
 %post zookeeper
@@ -230,6 +251,8 @@ done
 %{_bindir}/kafka-streams-application-reset
 %{_bindir}/kafka-topics
 %{_bindir}/support-metrics-bundle
+/etc/init.d/confluent-kafka
+%attr(-,kafka,kafka) /var/log/confluent-kafka
 /var/run/confluent-kafka
 %config(noreplace) %{_sysconfdir}/kafka/connect*
 %config(noreplace) %{_sysconfdir}/kafka/server.properties

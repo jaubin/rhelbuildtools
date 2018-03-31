@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# confluent-kafka         Confluent Kafka Start/Stop/Restart scripts
+# processname: kafka
+# chkconfig: - 81 19
+### BEGIN INIT INFO
+# Provides: kafka
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Description: Confluent kafka
+# Short-Description: start and stop kafka
+### END INIT INFO
+
+SCRIPT_NAME=$(basename $0)
+
+export LOG_DIR=/var/log/confluent-kafka
+export PIDFILE=/var/run/confluent-kafka/confluent-kafka.pid
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export KAFKA_USER=kafka
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser -s /bin/sh"
+else
+    SU="/bin/su -s /bin/sh"
+fi
+
+. /etc/rc.d/init.d/functions
+
+start() 
+{
+   $SU $KAFKA_USER -c "/usr/bin/kafka-server-start -daemon /etc/kafka/server.properties"
+   local pid=$(ps ax | grep -i 'io\.confluent\.support\.metrics\.SupportedKafka' | grep java | grep -v grep | awk '{print $1}')
+   echo $pid > $PIDFILE
+}
+
+stop()
+{
+   $SU $KAFKA_USER /usr/bin/kafka-server-stop
+   rm -f $PIDFILE
+}
+
+restart()
+{
+   stop
+   start
+}
+
+rh_status()
+{
+   status -p "$PIDFILE" confluent-kafka
+}
+
+usage()
+{
+   echo >&2 "$SCRIPT_NAME (start|stop|restart|status)"
+}
+
+case "$1" in
+   start)
+      start
+      ;;
+   stop)
+      stop
+      ;;
+   restart)
+      restart
+      ;;
+   status)
+      rh_status
+      ;;
+   *)
+      usage
+      exit 1
+      ;;
+esac
