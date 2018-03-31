@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# confluent-schema-registry         Confluent Schema Registry (Avro) Start/Stop/Restart scripts
+# processname: schema-registry
+# chkconfig: - 80 20
+### BEGIN INIT INFO
+# Provides: schema-registry
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Description: Confluent schema-registry (Avro)
+# Short-Description: start and stop schema-registry
+### END INIT INFO
+
+SCRIPT_NAME=$(basename $0)
+
+export LOG_DIR=/var/log/confluent-schema-registry
+export PIDFILE=/var/run/confluent-schema-registry/confluent-schema-registry.pid
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export SCHEMA_REGISTRY_USER=schema-registry
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser -s /bin/sh"
+else
+    SU="/bin/su -s /bin/sh"
+fi
+
+. /etc/rc.d/init.d/functions
+
+start() 
+{
+   $SU $SCHEMA_REGISTRY_USER -c "/usr/bin/schema-registry-start -daemon /etc/schema-registry/schema-registry.properties"
+   local pid=$(ps ax | egrep -i "(io.confluent.kafka.schemaregistry.rest.Main)|(io.confluent.kafka.schemaregistry.rest.SchemaRegistryMain)" | grep java | grep -v grep | awk '{print $1}')
+   echo $pid > $PIDFILE
+}
+
+stop()
+{
+   $SU $SCHEMA_REGISTRY_USER /usr/bin/schema-registry-stop
+   rm -f $PIDFILE
+}
+
+restart()
+{
+   stop
+   start
+}
+
+rh_status()
+{
+   status -p "$PIDFILE" confluent-schema-registry
+}
+
+usage()
+{
+   echo >&2 "$SCRIPT_NAME (start|stop|restart|status)"
+}
+
+case "$1" in
+   start)
+      start
+      ;;
+   stop)
+      stop
+      ;;
+   restart)
+      restart
+      ;;
+   status)
+      rh_status
+      ;;
+   *)
+      usage
+      exit 1
+      ;;
+esac

@@ -1,7 +1,7 @@
 Name:	        confluent	
 Version:        %{project_version} 
 Release:	1%{?dist}
-Summary:	Gojul's Confluent distribution (Confluent one packaged)
+Summary:	Gojul's Confluent distribution (Confluent one packaged) - UNOFFICIAL
 
 Group:		org.gojul.rpmbuildtools
 License:	GPL
@@ -28,12 +28,16 @@ Summary: Confluent common files.
 Confluent common components contains Confluent's distro common components..
 The purpose here is to have a standard easy-to-use Confluent distribution.
 
+#-------------------------- CAMUS -----------------------------------------
+
 %package camus
 Summary: LinkedIn Camus
 Requires: confluent-common
 
 %description camus
 LinkedIn Camus software.
+
+#-------------------------- KAFKA --------------------------------------
 
 %package kafka-serde-tools
 Summary: Kafka Serde tools
@@ -42,12 +46,16 @@ Requires: confluent-common
 %description kafka-serde-tools
 Confluent Kafka Serde tools libraries.
 
+
+
 %package kafka-libs
 Summary: Kafka libs
 Requires: confluent-common
 
 %description kafka-libs
 Confluent Kafka libraries.
+
+
 
 %package kafka
 Summary: Kafka server itself
@@ -56,13 +64,6 @@ Requires: confluent-kafka-serde-tools
 
 %description kafka
 Confluent Kafka suite
-
-%package kafka-mirror-maker
-Summary: Kafka Mirror Maker
-Requires: confluent-kafka-libs
-
-%description kafka-mirror-maker
-Kafka mirror maker
 
 %pre kafka
 getent passwd kafka > /dev/null || /usr/sbin/useradd kafka
@@ -85,12 +86,33 @@ then
    chkconfig --del /etc/init.d/confluent-kafka || true
 fi 
 
+
+
+%package kafka-mirror-maker
+Summary: Kafka Mirror Maker
+Requires: confluent-kafka-libs
+
+%description kafka-mirror-maker
+Kafka mirror maker
+
+
+%package kafka-test-tools
+Summary: Kafka test tools used to test a Kafka installation
+Requires: confluent-kafka-libs
+
+%description kafka-test-tools
+Kafka test tools to verify a Kafka installation
+
+#--------------------------------- KAFKA REST -------------------------------------
+
 %package kafka-rest
 Summary: Kafka REST connector
 Requires: confluent-common
 
 %description kafka-rest
 Confluent Kafka REST connector.
+
+#-------------------------------- KAFKA CONNECT ------------------------------------
 
 %package kafka-connect-storage-common
 Summary: Kafka connect storage common library
@@ -100,12 +122,16 @@ Requires: confluent-kafka-serde-tools
 %description kafka-connect-storage-common
 Confluent Kafka connect storage common libraries
 
+
+
 %package kafka-connect-elasticsearch
 Summary: Kafka connect ElasticSearch library
 Requires: confluent-kafka-connect-storage-common
 
 %description kafka-connect-elasticsearch
 Confluent Kafka connect ElasticSearch library
+
+
 
 %package kafka-connect-hdfs
 Summary: Kafka connect HDFS library
@@ -114,12 +140,16 @@ Requires: confluent-kafka-connect-storage-common
 %description kafka-connect-hdfs
 Confluent Kafka connect HDFS library
 
+
+
 %package kafka-connect-jdbc
 Summary: Kafka connect JDBC library
 Requires: confluent-kafka-connect-storage-common
 
 %description kafka-connect-jdbc
 Confluent Kafka connect JDBC library
+
+
 
 %package kafka-connect-s3
 Summary: Kafka connect S3 library
@@ -128,12 +158,7 @@ Requires: confluent-kafka-connect-storage-common
 %description kafka-connect-s3
 Confluent Kafka Connect for Amazon S3.
 
-%package kafka-test-tools
-Summary: Kafka test tools used to test a Kafka installation
-Requires: confluent-kafka
-
-%description kafka-test-tools
-Kafka test tools to verify a Kafka installation
+#---------------------------------- KAFKA SCHEMA REGISTRY (AVRO) -----------------------------------
 
 %package schema-registry
 Summary: Kafka schema registry (Avro)
@@ -142,12 +167,35 @@ Requires: confluent-common
 %description schema-registry
 Kafka schema registry (Avro)
 
+%pre schema-registry
+getent passwd schema-registry > /dev/null || /usr/sbin/useradd schema-registry
+
+if [ -f /etc/init.d/confluent-schema-registry ]
+then
+   /etc/init.d/confluent-schema-registry stop || true
+fi
+
+%post schema-registry
+if [ "$1" == 0 ]
+then
+   chkconfig --add /etc/init.d/confluent-schema-registry || true
+fi 
+
+%preun schema-registry
+if [ "$1" == 0 ]
+then
+   /etc/init.d/confluent-schema-registry stop || true
+   chkconfig --del /etc/init.d/confluent-schema-registry || true
+fi 
+
 %package schema-registry-test-tools
 Summary: Kafka schema registry test tools
 Requires: confluent-schema-registry
 
 %description schema-registry-test-tools
 Kafka avro test tools to verify a Kafka installation
+
+#----------------------------------- ZOOKEEPER ---------------------------------------------
 
 %package zookeeper
 Summary: Kafka Zookeeper daemon
@@ -177,6 +225,9 @@ then
    chkconfig --del /etc/init.d/confluent-zookeeper || true
 fi 
 
+
+#--------------------------------------- INSTALL SECTION ---------------------------------------
+
 %install
 rm -rf %{buildroot}/*
 %cmake
@@ -195,10 +246,12 @@ rm -rf bin/confluent
 mv etc/* %{buildroot}/etc
 rm -rf etc
 
-for i in kafka zookeeper; do
+for i in kafka schema-registry zookeeper; do
    mkdir -p %{buildroot}/var/run/confluent-${i}
    mkdir -p %{buildroot}/var/log/confluent-${i}
 done
+
+#-------------------------- FILES ----------------------------------------
 
 %files common
 %defattr(-,root,root,-)
@@ -316,8 +369,11 @@ done
 %files schema-registry
 %defattr(-,root,root,-)
 %{_bindir}/schema-registry-*
+/etc/init.d/confluent-schema-registry
 %{_datadir}/doc/schema-registry
 %{_datadir}/java/schema-registry
+%attr(-,schema-registry,schema-registry) /var/log/confluent-schema-registry
+/var/run/confluent-schema-registry
 %dir %{_sysconfdir}/schema-registry
 %config(noreplace) %{_sysconfdir}/schema-registry/*
 
