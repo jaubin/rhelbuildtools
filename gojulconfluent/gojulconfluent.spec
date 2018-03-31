@@ -135,7 +135,32 @@ Requires: confluent-kafka-libs
 %description zookeeper
 Kafka Zookeeper
 
+%pre zookeeper
+getent passwd zookeeper > /dev/null || /usr/sbin/useradd zookeeper
+
+if [ -f /etc/init.d/confluent-zookeeper ]
+then
+   /etc/init.d/confluent-zookeeper stop
+fi
+
+%post zookeeper
+if [ "$1" == 0 ]
+then
+   chkconfig --add /etc/init.d/confluent-zookeeper || true
+fi 
+
+%preun zookeeper
+if [ "$1" == 0 ]
+then
+   /etc/init.d/confluent-zookeeper stop || true
+   chkconfig --del /etc/init.d/confluent-zookeeper || true
+fi 
+
 %install
+rm -rf %{buildroot}/*
+%cmake
+make install DESTDIR=%{buildroot}
+
 mkdir -p %{buildroot}%{_prefix}
 cd %{buildroot}%{_prefix}
 tar zxf %{_builddir}/%{name}-%{version}/confluent-distrib.tgz --strip-components 1 
@@ -146,8 +171,13 @@ rm -rf README
 rm -rf bin/windows
 rm -rf bin/confluent
 
-mv etc %{buildroot}
+mv etc/* %{buildroot}/etc
+rm -rf etc
 
+for i in kafka zookeeper; do
+   mkdir -p %{buildroot}/var/run/confluent-${i}
+   mkdir -p %{buildroot}/var/log/confluent-${i}
+done
 
 %files common
 %defattr(-,root,root,-)
@@ -200,6 +230,7 @@ mv etc %{buildroot}
 %{_bindir}/kafka-streams-application-reset
 %{_bindir}/kafka-topics
 %{_bindir}/support-metrics-bundle
+/var/run/confluent-kafka
 %config(noreplace) %{_sysconfdir}/kafka/connect*
 %config(noreplace) %{_sysconfdir}/kafka/server.properties
 
@@ -274,4 +305,7 @@ mv etc %{buildroot}
 %files zookeeper
 %defattr(-,root,root,-)
 %{_bindir}/zookeeper*
+/etc/init.d/confluent-zookeeper
+%attr(-,zookeeper,zookeeper) /var/log/confluent-zookeeper
+/var/run/confluent-zookeeper
 %config(noreplace) %{_sysconfdir}/kafka/zookeeper.properties

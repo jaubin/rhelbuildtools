@@ -1,0 +1,78 @@
+#!/bin/bash
+#
+# confluent-zookeeper         Confluent Zookeeper Start/Stop/Restart scripts
+# processname: zookeeper
+# chkconfig: - 80 20
+### BEGIN INIT INFO
+# Provides: zookeeper
+# Required-Start: $network $syslog
+# Required-Stop: $network $syslog
+# Default-Start:
+# Default-Stop:
+# Description: Confluent zookeeper
+# Short-Description: start and stop zookeeper
+### END INIT INFO
+
+SCRIPT_NAME=$(basename $0)
+
+export LOG_DIR=/var/log/confluent-zookeeper
+export PIDFILE=/var/run/confluent-zookeeper/confluent-zookeeper.pid
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0
+export ZOOKEEPER_USER=zookeeper
+
+# For SELinux we need to use 'runuser' not 'su'
+if [ -x "/sbin/runuser" ]; then
+    SU="/sbin/runuser -s /bin/sh"
+else
+    SU="/bin/su -s /bin/sh"
+fi
+
+. /etc/rc.d/init.d/functions
+
+start() 
+{
+   $SU $ZOOKEEPER_USER -c "/usr/bin/zookeeper-server-start -daemon /etc/kafka/zookeeper.properties"
+   local pid=$(ps ax | grep java | grep -i QuorumPeerMain | grep -v grep | awk '{print $1}')
+   echo $pid > $PIDFILE
+}
+
+stop()
+{
+   $SU $ZOOKEEPER_USER /usr/bin/zookeeper-server-stop
+   rm -f $PIDFILE
+}
+
+restart()
+{
+   stop
+   start
+}
+
+rh_status()
+{
+   status -p "$PIDFILE" confluent-zookeeper
+}
+
+usage()
+{
+   echo >&2 "$SCRIPT_NAME (start|stop|restart|status)"
+}
+
+case "$1" in
+   start)
+      start
+      ;;
+   stop)
+      stop
+      ;;
+   restart)
+      restart
+      ;;
+   status)
+      rh_status
+      ;;
+   *)
+      usage
+      exit 1
+      ;;
+esac
