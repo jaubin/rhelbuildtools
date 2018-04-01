@@ -10,7 +10,11 @@ Source0:	gojulcatalinabase.tgz
 
 BuildRequires:  gojulrpmbuildtools	
 
+Requires:       bash
+Requires:       chkconfig
+Requires:       coreutils
 Requires:       gojultomcat
+Requires:       initscripts
 
 %global _catalinahomeinstalldir /home/gojultomcat
 
@@ -44,7 +48,7 @@ getent passwd gojultomcat > /dev/null || /usr/sbin/useradd gojultomcat
 
 if [ -f /etc/init.d/gojultomcat ]
 then
-   /etc/init.d/gojultomcat stop || true
+   /etc/init.d/gojultomcat stop || true
 fi
 
 %post

@@ -10,8 +10,10 @@ Source0:	gojultomcat8.tgz
 
 BuildRequires:	gojulrpmbuildtools
 
+Requires:       bash
 Requires:       java-1.8.0-openjdk-devel
 
+%global __jar_repack %{nil}
 %global _gojulinstalldir /usr/share/gojultomcat
 
 %description
