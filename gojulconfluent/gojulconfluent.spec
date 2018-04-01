@@ -20,6 +20,7 @@ Requires:       java-1.8.0-openjdk-devel
 Requires:       procps
 
 %global __jar_repack %{nil}
+%global __versrel %{version}-%{release}
 
 %description
 Confluent package suite contains all the packages required to make a standard
@@ -39,7 +40,7 @@ The purpose here is to have a standard easy-to-use Confluent distribution.
 
 %package camus
 Summary: LinkedIn Camus
-Requires: confluent-common
+Requires: confluent-common = %{__versrel}
 
 %description camus
 LinkedIn Camus software.
@@ -48,7 +49,7 @@ LinkedIn Camus software.
 
 %package kafka-serde-tools
 Summary: Kafka Serde tools
-Requires: confluent-common
+Requires: confluent-common = %{__versrel}
 
 %description kafka-serde-tools
 Confluent Kafka Serde tools libraries.
@@ -57,7 +58,7 @@ Confluent Kafka Serde tools libraries.
 
 %package kafka-libs
 Summary: Kafka libs
-Requires: confluent-common
+Requires: confluent-common = %{__versrel}
 
 %description kafka-libs
 Confluent Kafka libraries.
@@ -66,8 +67,8 @@ Confluent Kafka libraries.
 
 %package kafka
 Summary: Kafka server itself
-Requires: confluent-kafka-libs
-Requires: confluent-kafka-serde-tools
+Requires: confluent-kafka-libs = %{__versrel}
+Requires: confluent-kafka-serde-tools = %{__versrel}
 
 %description kafka
 Confluent Kafka suite
@@ -97,7 +98,7 @@ fi
 
 %package kafka-mirror-maker
 Summary: Kafka Mirror Maker
-Requires: confluent-kafka-libs
+Requires: confluent-kafka-libs = %{__versrel}
 
 %description kafka-mirror-maker
 Kafka mirror maker
@@ -105,7 +106,7 @@ Kafka mirror maker
 
 %package kafka-test-tools
 Summary: Kafka test tools used to test a Kafka installation
-Requires: confluent-kafka-libs
+Requires: confluent-kafka-libs = %{__versrel}
 
 %description kafka-test-tools
 Kafka test tools to verify a Kafka installation
@@ -114,7 +115,7 @@ Kafka test tools to verify a Kafka installation
 
 %package kafka-rest
 Summary: Kafka REST connector
-Requires: confluent-common
+Requires: confluent-common = %{__versrel}
 
 %description kafka-rest
 Confluent Kafka REST connector.
@@ -146,8 +147,8 @@ fi
 
 %package kafka-connect-storage-common
 Summary: Kafka connect storage common library
-Requires: confluent-common
-Requires: confluent-kafka-serde-tools
+Requires: confluent-common = %{__versrel}
+Requires: confluent-kafka-serde-tools = %{__versrel}
 
 %description kafka-connect-storage-common
 Confluent Kafka connect storage common libraries
@@ -156,7 +157,7 @@ Confluent Kafka connect storage common libraries
 
 %package kafka-connect-elasticsearch
 Summary: Kafka connect ElasticSearch library
-Requires: confluent-kafka-connect-storage-common
+Requires: confluent-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-elasticsearch
 Confluent Kafka connect ElasticSearch library
@@ -165,7 +166,7 @@ Confluent Kafka connect ElasticSearch library
 
 %package kafka-connect-hdfs
 Summary: Kafka connect HDFS library
-Requires: confluent-kafka-connect-storage-common
+Requires: confluent-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-hdfs
 Confluent Kafka connect HDFS library
@@ -174,7 +175,7 @@ Confluent Kafka connect HDFS library
 
 %package kafka-connect-jdbc
 Summary: Kafka connect JDBC library
-Requires: confluent-kafka-connect-storage-common
+Requires: confluent-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-jdbc
 Confluent Kafka connect JDBC library
@@ -183,7 +184,7 @@ Confluent Kafka connect JDBC library
 
 %package kafka-connect-s3
 Summary: Kafka connect S3 library
-Requires: confluent-kafka-connect-storage-common
+Requires: confluent-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-s3
 Confluent Kafka Connect for Amazon S3.
@@ -192,7 +193,7 @@ Confluent Kafka Connect for Amazon S3.
 
 %package schema-registry
 Summary: Kafka schema registry (Avro)
-Requires: confluent-common
+Requires: confluent-common = %{__versrel}
 
 %description schema-registry
 Kafka schema registry (Avro)
@@ -220,7 +221,7 @@ fi
 
 %package schema-registry-test-tools
 Summary: Kafka schema registry test tools
-Requires: confluent-schema-registry
+Requires: confluent-schema-registry = %{__versrel}
 
 %description schema-registry-test-tools
 Kafka avro test tools to verify a Kafka installation
@@ -229,7 +230,7 @@ Kafka avro test tools to verify a Kafka installation
 
 %package zookeeper
 Summary: Kafka Zookeeper daemon
-Requires: confluent-kafka-libs
+Requires: confluent-kafka-libs = %{__versrel}
 
 %description zookeeper
 Kafka Zookeeper
