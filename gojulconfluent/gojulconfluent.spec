@@ -10,7 +10,14 @@ Source0:	confluent.tgz
 
 BuildRequires:	gojulrpmbuildtools
 
+Requires:       bash
+Requires:       chkconfig
+Requires:       coreutils
+Requires:       gawk
+Requires:       grep
+Requires:       initscripts
 Requires:       java-1.8.0-openjdk-devel
+Requires:       procps
 
 %global __jar_repack %{nil}
 
