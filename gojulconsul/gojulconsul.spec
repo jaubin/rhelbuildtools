@@ -71,4 +71,4 @@ fi
 %attr(-,consul,consul) /var/lib/consul
 %attr(-,consul,consul) /var/log/consul
 
-%config(noreplace) %{_sysconfdir}/consul.conf
+%config(noreplace) %{_sysconfdir}/consul.json

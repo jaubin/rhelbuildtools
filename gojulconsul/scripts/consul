@@ -29,7 +29,7 @@ exec="/usr/bin/$prog"
 pidfile="/var/run/consul/$prog.pid"
 lockfile="/var/lock/subsys/$prog"
 logfile="/var/log/consul/$prog.log"
-conffile="/etc/consul.conf"
+conffile="/etc/consul.json"
 confdir="/etc/consul.d"
 
 # pull in sysconfig settings
