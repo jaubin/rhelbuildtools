@@ -15,6 +15,7 @@ Requires:       chkconfig
 Requires:       coreutils
 Requires:       gojultomcat
 Requires:       initscripts
+Requires:       shadow-utils
 
 %global _catalinahomeinstalldir /home/gojultomcat
 
