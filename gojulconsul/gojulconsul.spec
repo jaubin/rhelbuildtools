@@ -9,6 +9,7 @@ URL:		https://www.github.com/gojul/gojulrpmbuildtools
 Source0:	consul.tgz
 
 BuildRequires:	gojulrpmbuildtools
+BuildRequires:  unzip
 
 Requires:       bash
 Requires:       filesystem
