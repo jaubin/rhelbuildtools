@@ -11,6 +11,7 @@ URL:		https://www.github.com/gojul/gojulrpmbuildtools
 Source0:	gojulrpmbuildtools.tgz
 
 BuildRequires:	cmake
+BuildRequires:  gcc
 
 Requires:       apache-maven
 Requires:       /bin/bash
