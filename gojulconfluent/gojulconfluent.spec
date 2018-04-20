@@ -10,16 +10,6 @@ Source0:	confluent.tgz
 
 BuildRequires:	gojulrpmbuildtools
 
-Requires:       bash
-Requires:       chkconfig
-Requires:       coreutils
-Requires:       gawk
-Requires:       grep
-Requires:       initscripts
-Requires:       java-1.8.0-openjdk-devel
-Requires:       procps
-Requires:       shadow-utils
-
 %global __jar_repack %{nil}
 %global __versrel %{version}-%{release}
 
@@ -32,6 +22,16 @@ Confluent distribution for Apache Kafka to RHEL.
 
 %package common
 Summary: Confluent common files.
+
+Requires:       bash
+Requires:       chkconfig
+Requires:       coreutils
+Requires:       gawk
+Requires:       grep
+Requires:       initscripts
+Requires:       java-1.8.0-openjdk-devel
+Requires:       procps
+Requires:       shadow-utils
 
 %description common
 Confluent common components contains Confluent's distro common components..
