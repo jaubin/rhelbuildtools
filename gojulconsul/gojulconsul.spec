@@ -24,6 +24,19 @@ work around this limitation.
 Note that this package contains init scripts copied from repository 
 https://github.com/hypoport/consul-rpm-rhel6/
 
+%package ui
+Summary: Consul Web UI
+Requires: consul
+
+%description ui
+Consul UI enables Consul's server Web UI. It can be reached
+from URL http://localhost:8500/ui unless you've changed the
+HTTP port for the UI.
+
+Note after installing this package you'll have to manually restart
+Consul for the changes to take effect.
+
+
 %prep
 %setup -q -c
 unzip consul.zip
@@ -38,7 +51,6 @@ mkdir -p %{buildroot}%{_bindir}
 mv %{_builddir}/%{buildsubdir}/consul %{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}/var/{lib,log,run}/consul
-mkdir -p %{buildroot}/etc/consul.d
 
 %pre
 getent passwd consul > /dev/null || /usr/sbin/useradd consul
@@ -61,15 +73,25 @@ then
    chkconfig --del /etc/init.d/consul || true
 fi
 
+%post ui
+echo >&2 "Please restart Consul for the UI changes to take effect."
+
+%preun ui
+echo >&2 "Please restart Consul for the UI changes to take effect."
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}/consul
 %{_docdir}/consul
 %{_sysconfdir}/init.d/consul
-%{_sysconfdir}/consul.d
+%dir %{_sysconfdir}/consul.d
 /var/run/consul
 
 %attr(-,consul,consul) /var/lib/consul
 %attr(-,consul,consul) /var/log/consul
 
 %config(noreplace) %{_sysconfdir}/consul.json
+
+%files ui
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/consul.d/consul-ui.json
