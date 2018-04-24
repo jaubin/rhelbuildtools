@@ -15,7 +15,7 @@
 
 SCRIPT_NAME=$(basename $0)
 
-export LOG_DIR=/var/log/confluent-schema-registry
+export LOG_DIR=/var/log/confluent/schema-registry
 export PIDFILE=/var/run/confluent-schema-registry/confluent-schema-registry.pid
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
 export SCHEMA_REGISTRY_USER=cp-schema-registry
