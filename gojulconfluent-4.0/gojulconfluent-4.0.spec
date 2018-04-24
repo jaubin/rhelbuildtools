@@ -1,4 +1,4 @@
-Name:	        confluent	
+Name:	        confluent-4.0	
 Version:        %{project_version} 
 Release:	1%{?dist}
 Summary:	Gojul's Confluent distribution (Confluent one packaged) - UNOFFICIAL
@@ -33,6 +33,8 @@ Requires:       java-1.8.0-openjdk-devel
 Requires:       procps
 Requires:       shadow-utils
 
+Conflicts:      confluent-4.1-common
+
 %description common
 Confluent common components contains Confluent's distro common components..
 The purpose here is to have a standard easy-to-use Confluent distribution.
@@ -41,7 +43,7 @@ The purpose here is to have a standard easy-to-use Confluent distribution.
 
 %package camus
 Summary: LinkedIn Camus
-Requires: confluent-common = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
 
 %description camus
 LinkedIn Camus software.
@@ -50,7 +52,7 @@ LinkedIn Camus software.
 
 %package kafka-serde-tools
 Summary: Kafka Serde tools
-Requires: confluent-common = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
 
 %description kafka-serde-tools
 Confluent Kafka Serde tools libraries.
@@ -59,7 +61,7 @@ Confluent Kafka Serde tools libraries.
 
 %package kafka-libs
 Summary: Kafka libs
-Requires: confluent-common = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
 
 %description kafka-libs
 Confluent Kafka libraries.
@@ -68,8 +70,8 @@ Confluent Kafka libraries.
 
 %package kafka
 Summary: Kafka server itself
-Requires: confluent-kafka-libs = %{__versrel}
-Requires: confluent-kafka-serde-tools = %{__versrel}
+Requires: confluent-4.0-kafka-libs = %{__versrel}
+Requires: confluent-4.0-kafka-serde-tools = %{__versrel}
 
 %description kafka
 Confluent Kafka suite
@@ -79,7 +81,7 @@ getent passwd kafka > /dev/null || /usr/sbin/useradd kafka
 
 if [ -f /etc/init.d/confluent-kafka ]
 then
-   /etc/init.d/confluent-kafka stop || true
+   /etc/init.d/confluent-kafka stop || true
 fi
 
 %post kafka
@@ -91,7 +93,7 @@ fi
 %preun kafka
 if [ "$1" == 0 ]
 then
-   /etc/init.d/confluent-kafka stop || true
+   /etc/init.d/confluent-kafka stop || true
    chkconfig --del /etc/init.d/confluent-kafka || true
 fi 
 
@@ -99,7 +101,7 @@ fi
 
 %package kafka-mirror-maker
 Summary: Kafka Mirror Maker
-Requires: confluent-kafka-libs = %{__versrel}
+Requires: confluent-4.0-kafka-libs = %{__versrel}
 
 %description kafka-mirror-maker
 Kafka mirror maker
@@ -107,7 +109,7 @@ Kafka mirror maker
 
 %package kafka-test-tools
 Summary: Kafka test tools used to test a Kafka installation
-Requires: confluent-kafka-libs = %{__versrel}
+Requires: confluent-4.0-kafka-libs = %{__versrel}
 
 %description kafka-test-tools
 Kafka test tools to verify a Kafka installation
@@ -116,7 +118,7 @@ Kafka test tools to verify a Kafka installation
 
 %package kafka-rest
 Summary: Kafka REST connector
-Requires: confluent-common = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
 
 %description kafka-rest
 Confluent Kafka REST connector.
@@ -126,7 +128,7 @@ getent passwd kafka-rest > /dev/null || /usr/sbin/useradd kafka-rest
 
 if [ -f /etc/init.d/confluent-kafka-rest ]
 then
-   /etc/init.d/confluent-kafka-rest stop || true
+   /etc/init.d/confluent-kafka-rest stop || true
 fi
 
 %post kafka-rest
@@ -138,7 +140,7 @@ fi
 %preun kafka-rest
 if [ "$1" == 0 ]
 then
-   /etc/init.d/confluent-kafka-rest stop || true
+   /etc/init.d/confluent-kafka-rest stop || true
    chkconfig --del /etc/init.d/confluent-kafka-rest || true
 fi 
 
@@ -148,8 +150,8 @@ fi
 
 %package kafka-connect-storage-common
 Summary: Kafka connect storage common library
-Requires: confluent-common = %{__versrel}
-Requires: confluent-kafka-serde-tools = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
+Requires: confluent-4.0-kafka-serde-tools = %{__versrel}
 
 %description kafka-connect-storage-common
 Confluent Kafka connect storage common libraries
@@ -158,7 +160,7 @@ Confluent Kafka connect storage common libraries
 
 %package kafka-connect-elasticsearch
 Summary: Kafka connect ElasticSearch library
-Requires: confluent-kafka-connect-storage-common = %{__versrel}
+Requires: confluent-4.0-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-elasticsearch
 Confluent Kafka connect ElasticSearch library
@@ -167,7 +169,7 @@ Confluent Kafka connect ElasticSearch library
 
 %package kafka-connect-hdfs
 Summary: Kafka connect HDFS library
-Requires: confluent-kafka-connect-storage-common = %{__versrel}
+Requires: confluent-4.0-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-hdfs
 Confluent Kafka connect HDFS library
@@ -176,7 +178,7 @@ Confluent Kafka connect HDFS library
 
 %package kafka-connect-jdbc
 Summary: Kafka connect JDBC library
-Requires: confluent-kafka-connect-storage-common = %{__versrel}
+Requires: confluent-4.0-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-jdbc
 Confluent Kafka connect JDBC library
@@ -185,7 +187,7 @@ Confluent Kafka connect JDBC library
 
 %package kafka-connect-s3
 Summary: Kafka connect S3 library
-Requires: confluent-kafka-connect-storage-common = %{__versrel}
+Requires: confluent-4.0-kafka-connect-storage-common = %{__versrel}
 
 %description kafka-connect-s3
 Confluent Kafka Connect for Amazon S3.
@@ -194,7 +196,7 @@ Confluent Kafka Connect for Amazon S3.
 
 %package schema-registry
 Summary: Kafka schema registry (Avro)
-Requires: confluent-common = %{__versrel}
+Requires: confluent-4.0-common = %{__versrel}
 
 %description schema-registry
 Kafka schema registry (Avro)
@@ -204,7 +206,7 @@ getent passwd schema-registry > /dev/null || /usr/sbin/useradd schema-registry
 
 if [ -f /etc/init.d/confluent-schema-registry ]
 then
-   /etc/init.d/confluent-schema-registry stop || true
+   /etc/init.d/confluent-schema-registry stop || true
 fi
 
 %post schema-registry
@@ -216,13 +218,13 @@ fi
 %preun schema-registry
 if [ "$1" == 0 ]
 then
-   /etc/init.d/confluent-schema-registry stop || true
+   /etc/init.d/confluent-schema-registry stop || true
    chkconfig --del /etc/init.d/confluent-schema-registry || true
 fi 
 
 %package schema-registry-test-tools
 Summary: Kafka schema registry test tools
-Requires: confluent-schema-registry = %{__versrel}
+Requires: confluent-4.0-schema-registry = %{__versrel}
 
 %description schema-registry-test-tools
 Kafka avro test tools to verify a Kafka installation
@@ -231,7 +233,7 @@ Kafka avro test tools to verify a Kafka installation
 
 %package zookeeper
 Summary: Kafka Zookeeper daemon
-Requires: confluent-kafka-libs = %{__versrel}
+Requires: confluent-4.0-kafka-libs = %{__versrel}
 
 %description zookeeper
 Kafka Zookeeper
@@ -241,7 +243,7 @@ getent passwd zookeeper > /dev/null || /usr/sbin/useradd zookeeper
 
 if [ -f /etc/init.d/confluent-zookeeper ]
 then
-   /etc/init.d/confluent-zookeeper stop || true
+   /etc/init.d/confluent-zookeeper stop || true
 fi
 
 %post zookeeper
@@ -253,7 +255,7 @@ fi
 %preun zookeeper
 if [ "$1" == 0 ]
 then
-   /etc/init.d/confluent-zookeeper stop || true
+   /etc/init.d/confluent-zookeeper stop || true
    chkconfig --del /etc/init.d/confluent-zookeeper || true
 fi 
 
