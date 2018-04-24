@@ -77,7 +77,7 @@ Requires: confluent-4.0-kafka-serde-tools = %{__versrel}
 Confluent Kafka suite
 
 %pre kafka
-getent passwd kafka > /dev/null || /usr/sbin/useradd kafka
+getent passwd cp-kafka > /dev/null || /usr/sbin/useradd cp-kafka
 
 if [ -f /etc/init.d/confluent-kafka ]
 then
@@ -124,7 +124,7 @@ Requires: confluent-4.0-common = %{__versrel}
 Confluent Kafka REST connector.
 
 %pre kafka-rest
-getent passwd kafka-rest > /dev/null || /usr/sbin/useradd kafka-rest
+getent passwd cp-kafka-rest > /dev/null || /usr/sbin/useradd cp-kafka-rest
 
 if [ -f /etc/init.d/confluent-kafka-rest ]
 then
@@ -202,7 +202,7 @@ Requires: confluent-4.0-common = %{__versrel}
 Kafka schema registry (Avro)
 
 %pre schema-registry
-getent passwd schema-registry > /dev/null || /usr/sbin/useradd schema-registry
+getent passwd cp-schema-registry > /dev/null || /usr/sbin/useradd cp-schema-registry
 
 if [ -f /etc/init.d/confluent-schema-registry ]
 then
@@ -239,7 +239,7 @@ Requires: confluent-4.0-kafka-libs = %{__versrel}
 Kafka Zookeeper
 
 %pre zookeeper
-getent passwd zookeeper > /dev/null || /usr/sbin/useradd zookeeper
+getent passwd cp-kafka > /dev/null || /usr/sbin/useradd cp-kafka
 
 if [ -f /etc/init.d/confluent-zookeeper ]
 then

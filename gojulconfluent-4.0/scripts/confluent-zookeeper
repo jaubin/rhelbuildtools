@@ -18,7 +18,7 @@ SCRIPT_NAME=$(basename $0)
 export LOG_DIR=/var/log/confluent-zookeeper
 export PIDFILE=/var/run/confluent-zookeeper/confluent-zookeeper.pid
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
-export ZOOKEEPER_USER=zookeeper
+export ZOOKEEPER_USER=cp-kafka
 
 # For SELinux we need to use 'runuser' not 'su'
 if [ -x "/sbin/runuser" ]; then

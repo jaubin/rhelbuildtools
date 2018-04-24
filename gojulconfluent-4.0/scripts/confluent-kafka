@@ -18,7 +18,7 @@ SCRIPT_NAME=$(basename $0)
 export LOG_DIR=/var/log/confluent-kafka
 export PIDFILE=/var/run/confluent-kafka/confluent-kafka.pid
 export JAVA_HOME=/usr/lib/jvm/java-1.8.0
-export KAFKA_USER=kafka
+export KAFKA_USER=cp-kafka
 
 # For SELinux we need to use 'runuser' not 'su'
 if [ -x "/sbin/runuser" ]; then
