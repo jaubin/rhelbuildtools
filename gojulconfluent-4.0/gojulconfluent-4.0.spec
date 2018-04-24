@@ -339,7 +339,7 @@ done
 %{_bindir}/kafka-topics
 %{_bindir}/support-metrics-bundle
 /etc/init.d/confluent-kafka
-%attr(-,kafka,kafka) /var/log/confluent-kafka
+%attr(-,cp-kafka,cp-kafka) /var/log/confluent-kafka
 /var/run/confluent-kafka
 %config(noreplace) %{_sysconfdir}/kafka/connect*
 %config(noreplace) %{_sysconfdir}/kafka/server.properties
@@ -355,7 +355,7 @@ done
 %{_datadir}/doc/kafka-rest
 %{_datadir}/java/kafka-rest
 /etc/init.d/confluent-kafka-rest
-%attr(-,kafka-rest,kafka-rest) /var/log/confluent-kafka-rest
+%attr(-,cp-kafka-rest,cp-kafka-rest) /var/log/confluent-kafka-rest
 /var/run/confluent-kafka-rest
 %dir %{_sysconfdir}/kafka-rest
 %config(noreplace) %{_sysconfdir}/kafka-rest/*
@@ -409,7 +409,7 @@ done
 /etc/init.d/confluent-schema-registry
 %{_datadir}/doc/schema-registry
 %{_datadir}/java/schema-registry
-%attr(-,schema-registry,schema-registry) /var/log/confluent-schema-registry
+%attr(-,cp-schema-registry,cp-schema-registry) /var/log/confluent-schema-registry
 /var/run/confluent-schema-registry
 %dir %{_sysconfdir}/schema-registry
 %config(noreplace) %{_sysconfdir}/schema-registry/*
@@ -422,6 +422,6 @@ done
 %defattr(-,root,root,-)
 %{_bindir}/zookeeper*
 /etc/init.d/confluent-zookeeper
-%attr(-,zookeeper,zookeeper) /var/log/confluent-zookeeper
+%attr(-,cp-kafka,cp-kafka) /var/log/confluent-zookeeper
 /var/run/confluent-zookeeper
 %config(noreplace) %{_sysconfdir}/kafka/zookeeper.properties
