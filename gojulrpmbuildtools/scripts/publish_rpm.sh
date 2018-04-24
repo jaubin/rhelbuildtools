@@ -8,12 +8,16 @@ usage()
 {
    cat >&2 <<-EOF
 
-   $SCRIPT_NAME <RPM_package>
+   $SCRIPT_NAME <RPM_package> <prefix>
 
    Push the RPM package <RPM_package> to the local Maven
    repo. The URL of the Maven Repo must be filled in file
    /etc/gojulrpmbuildtools/maven_repo.properties, property name
    being MAVEN_REPO
+
+   The prefix parameter is optional and is required if and only
+   if there's a need to use a sub YUM repo within the Maven repo. This
+   is a feature used notably by Artifactory.	   
 
    In order to get the stuff working, the RPM package to upload
    must have a Maven-compliant group name.
@@ -39,11 +43,15 @@ exitWithError()
 # passed as a parameter.
 # PARAMS
 # - the rpm package file name
+# - the RPM prefix (optional)
 # RETURNS
 # - the group name of the RPM package
 getRpmGroup()
 {
-   rpm -qp --qf "%{GROUP}\n" $1
+   local prefix="$2"
+   local group=$(rpm -qp --qf "%{GROUP}\n" $1)
+
+   [[ -z "$prefix" ]] && echo "$group" || echo "${prefix}.${group}"
 }
 
 # Return the name of the RPM package file
@@ -82,7 +90,7 @@ getMavenRepoUrl()
    echo $mavenRepoUrl
 }
 
-if [ $# -ne 1 ]
+if [ $# -lt 1 ] || [ $# -gt 2 ] 
 then
   infoLog "Bad argument count"
   usage
@@ -94,9 +102,10 @@ then
 fi  
 
 rpmPackage="$1"
+prefix="$2"
 
 mavenRepoUrl=$(getMavenRepoUrl)
-rpmGroupId=$(getRpmGroup "$rpmPackage")
+rpmGroupId=$(getRpmGroup "$rpmPackage" "$prefix")
 rpmName=$(getRpmName "$rpmPackage")
 rpmVersion=$(getRpmVersion "$rpmPackage")
 

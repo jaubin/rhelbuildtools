@@ -8,7 +8,7 @@ usage()
 {
    echo >&2 <<-EOF
 
-   $SCRIPT_NAME
+   $SCRIPT_NAME <prefix>
 
    This script builds all the RPM packages available under the current
    directory, tags the SCM, and then pushes the published packages to the
@@ -19,6 +19,10 @@ usage()
    Maven specifications. Thus the remove Maven repo, which is specified in
    file /etc/gojulrpmbuildtools/maven_repo.properties, must be able to act
    as an RPM repository.
+
+   The prefix parameter is optional and is used in case you need to publish
+   your artifact in a sub-repository of your Maven repo. This is a property
+   notably supported by Artifactory.
 
    In order to be able to use this script on a CI server you must first ensure
    it can authenticate automatically to the VCS server. For example SSH key
@@ -56,7 +60,7 @@ if [ "$1" == "-h" ]
 then
    usage
    exit 0
-elif [ "$#" -ne 0 ]
+elif [ "$#" -gt 1 ]
 then
    echo >&2 "Bad argument count"
    usage
@@ -64,6 +68,7 @@ then
 fi
 
 projectVersion=$(getProjectVersion)
+repoPrefix="$1"
 
 $(dirname $0)/build_packages.sh
 
@@ -77,5 +82,5 @@ git push
 
 for i in $(find target/results -name "*.rpm")
 do
-   $(dirname $0)/publish_rpm.sh $i
+   $(dirname $0)/publish_rpm.sh $i "$repoPrefix"
 done
