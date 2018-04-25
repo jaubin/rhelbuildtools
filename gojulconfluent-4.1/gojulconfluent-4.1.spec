@@ -292,11 +292,8 @@ then
 fi
 
 %post zookeeper
-if [ "$1" == 0 ]
-then
-   /bin/systemctl daemon-reload
-   /bin/systemctl enable confluent-zookeeper || true
-fi 
+/bin/systemctl daemon-reload
+/bin/systemctl enable confluent-zookeeper || true
 
 %preun zookeeper
 if [ "$1" == 0 ]
