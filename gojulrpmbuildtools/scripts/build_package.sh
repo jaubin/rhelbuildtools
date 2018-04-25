@@ -23,6 +23,10 @@ usage()
    by anything which uses a compiler, as the environment may interfere with
    the build process.
 
+   In some cases the RPM package may depend on a big source archive. If this
+   is the case create a script named get_source_archive which is in charge
+   of getting this archive and storing it in the directory of the SPEC file.
+
 EOF
 }
 
@@ -100,6 +104,22 @@ getProjectVersion()
    echo $res
 }
 
+# Download the source package if necessary.
+# This step can be mandatory if the source package
+# is huge and cannot be put on the SCM.
+# PARAMS 
+# - the spec file name.
+getSourcePackageIfNecessary()
+{
+   local specFileName=$1
+   local specFileDir=$(getSpecFileDirName "$specFileName")
+   local downloadScript="${specFileDir}/get_source_archive"
+
+   if [ -f "$downloadScript" ]
+   then
+       sh "$downloadScript"	   
+   fi	   
+}
 
 # Create the archive to be packaged.
 # PARAMS :
@@ -108,6 +128,8 @@ createArchive()
 {
    local specFileName=$1
    local specFileDir=$(getSpecFileDir "$specFileName")
+
+   getSourcePackageIfNecessary "$specFileName"
 
    # spectool needs a project_version property set in order to work
    # here we put a dummy value to make it happy...
