@@ -36,7 +36,7 @@ These tools need Apache Maven, GCC and CMake to work correctly. Here's how to in
 ```bash
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 
-sudo yum install apache-maven cmake gcc
+sudo yum install apache-maven cmake gcc rpmdevtools
 ```
    
 ## Bootstrapping
