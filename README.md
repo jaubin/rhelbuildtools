@@ -34,6 +34,7 @@ The important thing is that the x.y couple must be unique for a given developmen
 These tools need Apache Maven, GCC and CMake to work correctly. Here's how to install it on RHEL 6.x :
 
 ```bash
+sudo yum install wget
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 
 sudo yum install apache-maven cmake gcc rpmdevtools
