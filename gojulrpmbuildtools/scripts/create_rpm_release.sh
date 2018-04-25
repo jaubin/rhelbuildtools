@@ -6,9 +6,9 @@ set -e
 
 usage()
 {
-   echo >&2 <<-EOF
+   cat >&2 <<-EOF
 
-   $SCRIPT_NAME <prefix>
+   $SCRIPT_NAME [prefix]
 
    This script builds all the RPM packages available under the current
    directory, tags the SCM, and then pushes the published packages to the
@@ -47,7 +47,7 @@ exitWithError()
 # - the project version
 getProjectVersion()
 {
-   [ -f project-info.properties ] || exitWithError "No project-info.properties found ! Aborting !" 5
+   [ -f project-info.properties ] || exitWithError "No project-info.properties found ! Aborting !" 5
 
    local res=$(grep "project.version=" project-info.properties | cut -d\= -f2)
 

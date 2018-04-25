@@ -8,7 +8,7 @@ usage()
 {
    cat >&2 <<-EOF
 
-   $SCRIPT_NAME <RPM_package> <prefix>
+   $SCRIPT_NAME <RPM_package> [prefix]
 
    Push the RPM package <RPM_package> to the local Maven
    repo. The URL of the Maven Repo must be filled in file
