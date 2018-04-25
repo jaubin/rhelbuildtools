@@ -78,6 +78,7 @@ Confluent Kafka suite
 %pre kafka
 getent passwd cp-kafka > /dev/null || /usr/sbin/useradd cp-kafka
 getent passwd cp-kafka-connect > /dev/null || /usr/sbin/useradd cp-kafka-connect
+getent group confluent > /dev/null || /usr/sbin/groupadd confluent
 
 serviceStatus=$(/bin/systemctl is-active confluent-kafka)
 if [ "$serviceStatus" == "active" ]
@@ -129,6 +130,7 @@ KSQL utilities for Kafka.
 
 %pre ksql
 getent passwd cp-ksql > /dev/null || /usr/sbin/useradd cp-ksql
+getent group confluent > /dev/null || /usr/sbin/groupadd confluent
 
 serviceStatus=$(/bin/systemctl is-active confluent-ksql)
 if [ "$serviceStatus" == "active" ]
@@ -166,6 +168,7 @@ Confluent Kafka REST connector.
 
 %pre kafka-rest
 getent passwd cp-kafka-rest > /dev/null || /usr/sbin/useradd cp-kafka-rest
+getent group confluent > /dev/null || /usr/sbin/groupadd confluent
 
 serviceStatus=$(/bin/systemctl is-active confluent-kafka-rest)
 if [ "$serviceStatus" == "active" ]
@@ -249,6 +252,7 @@ Kafka schema registry (Avro)
 
 %pre schema-registry
 getent passwd cp-schema-registry > /dev/null || /usr/sbin/useradd cp-schema-registry
+getent group confluent > /dev/null || /usr/sbin/groupadd confluent
 
 serviceStatus=$(/bin/systemctl is-active confluent-schema-registry)
 if [ "$serviceStatus" == "active" ]
@@ -291,6 +295,7 @@ Kafka Zookeeper
 
 %pre zookeeper
 getent passwd cp-kafka > /dev/null || /usr/sbin/useradd cp-kafka
+getent group confluent > /dev/null || /usr/sbin/groupadd confluent
 
 serviceStatus=$(/bin/systemctl is-active confluent-zookeeper)
 if [ "$serviceStatus" == "active" ]
@@ -393,7 +398,7 @@ done
 %{_bindir}/support-metrics-bundle
 /usr/lib/systemd/system/confluent-kafka-connect.service
 /usr/lib/systemd/system/confluent-kafka.service
-%attr(-,cp-kafka,cp-kafka) /var/log/confluent/kafka
+%attr(-,cp-kafka,confluent) /var/log/confluent/kafka
 %config(noreplace) %{_sysconfdir}/kafka/connect*
 %config(noreplace) %{_sysconfdir}/kafka/server.properties
 
@@ -407,7 +412,7 @@ done
 %{_datadir}/doc/ksql
 %{_datadir}/java/ksql
 /usr/lib/systemd/system/confluent-ksql.service
-%attr(-,cp-ksql,cp-ksql) /var/log/confluent/ksql
+%attr(-,cp-ksql,confluent) /var/log/confluent/ksql
 %dir %{_sysconfdir}/ksql
 %config(noreplace) %{_sysconfdir}/ksql/*
 
@@ -417,7 +422,7 @@ done
 %{_datadir}/doc/kafka-rest
 %{_datadir}/java/kafka-rest
 /usr/lib/systemd/system/confluent-kafka-rest.service
-%attr(-,cp-kafka-rest,cp-kafka-rest) /var/log/confluent/kafka-rest
+%attr(-,cp-kafka-rest,confluent) /var/log/confluent/kafka-rest
 %dir %{_sysconfdir}/kafka-rest
 %config(noreplace) %{_sysconfdir}/kafka-rest/*
 
@@ -470,7 +475,7 @@ done
 %{_datadir}/doc/schema-registry
 %{_datadir}/java/schema-registry
 /usr/lib/systemd/system/confluent-schema-registry.service
-%attr(-,cp-schema-registry,cp-schema-registry) /var/log/confluent/schema-registry
+%attr(-,cp-schema-registry,confluent) /var/log/confluent/schema-registry
 %dir %{_sysconfdir}/schema-registry
 %config(noreplace) %{_sysconfdir}/schema-registry/*
 
@@ -482,5 +487,5 @@ done
 %defattr(-,root,root,-)
 %{_bindir}/zookeeper*
 /usr/lib/systemd/system/confluent-zookeeper.service
-%attr(-,cp-kafka,cp-kafka) /var/log/confluent/zookeeper
+%attr(-,cp-kafka,confluent) /var/log/confluent/zookeeper
 %config(noreplace) %{_sysconfdir}/kafka/zookeeper.properties
