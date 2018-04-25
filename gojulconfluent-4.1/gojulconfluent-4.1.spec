@@ -87,11 +87,8 @@ then
 fi
 
 %post kafka
-if [ "$1" == 0 ]
-then
-   /bin/systemctl daemon-reload
-   /bin/systemctl enable confluent-kafka || true
-fi 
+/bin/systemctl daemon-reload
+/bin/systemctl enable confluent-kafka || true
 
 %preun kafka
 if [ "$1" == 0 ]
@@ -139,11 +136,8 @@ then
 fi
 
 %post ksql
-if [ "$1" == 0 ]
-then
-   /bin/systemctl daemon-reload
-   /bin/systemctl enable confluent-ksql || true
-fi 
+/bin/systemctl daemon-reload
+/bin/systemctl enable confluent-ksql || true
 
 %preun ksql
 if [ "$1" == 0 ]
@@ -177,11 +171,8 @@ then
 fi
 
 %post kafka-rest
-if [ "$1" == 0 ]
-then
-   /bin/systemctl daemon-reload
-   /bin/systemctl enable confluent-kafka-rest || true
-fi 
+/bin/systemctl daemon-reload
+/bin/systemctl enable confluent-kafka-rest || true
 
 %preun kafka-rest
 if [ "$1" == 0 ]
@@ -261,11 +252,8 @@ then
 fi
 
 %post schema-registry
-if [ "$1" == 0 ]
-then
-   /bin/systemctl daemon-reload
-   /bin/systemctl enable confluent-schema-registry || true
-fi 
+/bin/systemctl daemon-reload
+/bin/systemctl enable confluent-schema-registry || true
 
 %preun schema-registry
 if [ "$1" == 0 ]
