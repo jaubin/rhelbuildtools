@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CURDIR=$(dirname $0)
+TARGETFILE="${CURDIR}/confluent-distrib.tgz"
+
+if [ ! -f "$TARGETFILE" ]
+then
+   wget http://packages.confluent.io/archive/4.1/confluent-oss-4.1.0-2.11.tar.gz -O "$TARGETFILE"
+fi

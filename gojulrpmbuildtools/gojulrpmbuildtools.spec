@@ -19,6 +19,7 @@ Requires:	cmake
 Requires:       gcc
 Requires:       /usr/bin/rpmbuild
 Requires:       /usr/bin/spectool
+Requires:       wget
 
 %description
 Gojul RPM build tools are intended to make it easier to create RPM packages
