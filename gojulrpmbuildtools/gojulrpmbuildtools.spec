@@ -13,13 +13,17 @@ Source0:	gojulrpmbuildtools.tgz
 BuildRequires:	cmake
 BuildRequires:  gcc
 
-Requires:       apache-maven
 Requires:       /bin/bash
 Requires:	cmake
 Requires:       gcc
 Requires:       /usr/bin/rpmbuild
 Requires:       /usr/bin/spectool
 Requires:       wget
+
+# Maven is already provided on RHEL7+
+%{?el6:Requires:       apache-maven}
+%{?el7:Requires:       maven}
+
 
 %description
 Gojul RPM build tools are intended to make it easier to create RPM packages

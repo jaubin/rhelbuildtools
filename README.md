@@ -39,6 +39,11 @@ sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-mav
 
 sudo yum install apache-maven cmake gcc rpmdevtools
 ```
+
+On RHEL 7.x Maven is already provided so you only need to run :
+```
+sudo yum install cmake gcc rpmdevtools
+```
    
 ## Bootstrapping
 
