@@ -16,6 +16,7 @@ BuildRequires:  gcc
 Requires:       /bin/bash
 Requires:	cmake
 Requires:       gcc
+Requires:       git
 Requires:       /usr/bin/rpmbuild
 Requires:       /usr/bin/spectool
 Requires:       wget
