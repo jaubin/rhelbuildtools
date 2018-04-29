@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CURDIR=$(dirname $0)
+TARGETFILE="${CURDIR}/nexus-distrib.tgz"
+
+if [ ! -f "$TARGETFILE" ]
+then
+   wget https://download.sonatype.com/nexus/3/latest-unix.tar.gz -O "$TARGETFILE"
+fi
