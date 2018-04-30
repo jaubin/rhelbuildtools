@@ -13,6 +13,7 @@ BuildRequires:	gojulrpmbuildtools
 Requires:       bash
 Requires:       chkconfig
 Requires:       coreutils
+Requires:       createrepo
 Requires:       java-1.8.0-openjdk-devel
 Requires:       initscripts
 Requires:       shadow-utils
