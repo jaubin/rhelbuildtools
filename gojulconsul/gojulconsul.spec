@@ -56,10 +56,20 @@ Consul server enables Consul's server mode. This
 package is optional and should only be used when
 a single Consul instance is running.
 
+%package template
+Summary: Consul template daemon
+Requires: consul-client
+
+%description template
+Consul template is a useful tool for generating
+proxy configuration files from templates. The
+goal is to enable the use of a traditional reverse-proxy
+server like Apache or NGINX as an API gateway.
 
 %prep
 %setup -q -c
 unzip consul.zip
+unzip consul-template.zip
 
 %build
 %cmake
@@ -68,9 +78,12 @@ unzip consul.zip
 make install DESTDIR=%{buildroot}
 
 mkdir -p %{buildroot}%{_bindir}
-mv %{_builddir}/%{buildsubdir}/consul %{buildroot}%{_bindir}
+mv %{_builddir}/%{buildsubdir}/consul{,-template} %{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}/var/{lib,log,run}/consul
+mkdir -p %{buildroot}/var/{log,run}/consul-template
+
+mkdir -p %{buildroot}%{_sysconfdir}/consul-template.d
 
 %pre
 getent passwd consul > /dev/null || /usr/sbin/useradd consul
@@ -99,6 +112,29 @@ echo >&2 "Please restart Consul for the UI changes to take effect."
 %preun ui
 echo >&2 "Please restart Consul for the UI changes to take effect."
 
+%pre template
+getent passwd consul > /dev/null || /usr/sbin/useradd consul
+
+if [ -f /etc/init.d/consul-template ]
+then
+   /etc/init.d/consul-template stop || true
+fi
+
+%post template
+if [ "$1" == 0 ]
+then
+   chkconfig --add /etc/init.d/consul-template || true
+fi
+
+%preun template
+if [ "$1" == 0 ]
+then
+   /etc/init.d/consul-template stop || true
+   chkconfig --del /etc/init.d/consul-template || true
+fi
+
+
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}/consul
@@ -123,3 +159,16 @@ echo >&2 "Please restart Consul for the UI changes to take effect."
 %files server 
 %defattr(-,root,root,-)
 %{_sysconfdir}/consul.d/consul-server.json
+
+%files template
+%defattr(-,root,root,-)
+%{_sysconfdir}/init.d/consul-template
+%{_bindir}/consul-template
+%dir %{_sysconfdir}/consul-template.d
+/var/run/consul-template
+
+%attr(-,consul,consul) /var/log/consul-template
+
+%config(noreplace) %{_sysconfdir}/consul-template.hcl
+
+

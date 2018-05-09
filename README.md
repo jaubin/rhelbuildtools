@@ -65,5 +65,5 @@ build_packages.sh
 Apart from the available build tools, the following software have been packages :
 * Tomcat (directories gojultomcat and gojulcatalinabase) : required because RHEL's official Tomcat is really weirdly packaged.
 * Kafka (directory gojulconfluent-XX) : RHEL RPM packages for Confluent/Kafka. This way, Kafka is cleanly package because as of now, Confluent does not provide clean packages but instead a tar.gz distro. We provide a package recipe per major version of Kafka. There are additional instructions in each  Confluent directory. While they're optional, you're strongly advised to read them.
-* Consul (directory gojulconsul) : RHEL RPM packages for Consul service registry.
+* Consul and Consul Template (directory gojulconsul) : RHEL RPM packages for Consul service registry and its companion consul-template.
 * Nexus : RHEL RPM packages for Nexus, which is a usual RPM repo manager (and Maven repo as well)
