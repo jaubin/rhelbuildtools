@@ -27,6 +27,7 @@ https://github.com/hypoport/consul-rpm-rhel6/
 %package ui
 Summary: Consul Web UI
 Requires: consul
+Requires: consul-server
 
 %description ui
 Consul UI enables Consul's server Web UI. It can be reached
@@ -35,6 +36,25 @@ HTTP port for the UI.
 
 Note after installing this package you'll have to manually restart
 Consul for the changes to take effect.
+
+%package client 
+Summary: Consul Client mode
+Requires: consul
+Conflicts: consul-ui
+
+%description client
+Consul client enables Consul's client mode. This mode
+is very useful for example when used with consul-template. 
+
+%package server 
+Summary: Consul Server mode
+Requires: consul
+Conflicts: consul-client
+
+%description server 
+Consul server enables Consul's server mode. This 
+package is optional and should only be used when
+a single Consul instance is running.
 
 
 %prep
@@ -94,4 +114,12 @@ echo >&2 "Please restart Consul for the UI changes to take effect."
 
 %files ui
 %defattr(-,root,root,-)
-%config(noreplace) %{_sysconfdir}/consul.d/consul-ui.json
+%{_sysconfdir}/consul.d/consul-ui.json
+
+%files client
+%defattr(-,root,root,-)
+%{_sysconfdir}/consul.d/consul-client.json
+
+%files server 
+%defattr(-,root,root,-)
+%{_sysconfdir}/consul.d/consul-server.json
