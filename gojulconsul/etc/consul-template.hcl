@@ -130,7 +130,7 @@ wait {
 syslog {
   # This enables syslog logging. Specifying any other option also enables
   # syslog logging.
-  enabled = true
+  enabled = false
 
   # This is the name of the syslog facility to log to.
   facility = "LOCAL5"
