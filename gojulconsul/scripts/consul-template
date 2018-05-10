@@ -24,7 +24,7 @@
 . /etc/rc.d/init.d/functions
 
 prog="consul-template"
-user="consul"
+user="root"
 exec="/usr/bin/$prog"
 pidfile="/var/run/consul-template/$prog.pid"
 lockfile="/var/lock/subsys/$prog"

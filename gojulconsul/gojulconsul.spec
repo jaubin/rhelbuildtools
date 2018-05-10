@@ -66,6 +66,10 @@ proxy configuration files from templates. The
 goal is to enable the use of a traditional reverse-proxy
 server like Apache or NGINX as an API gateway.
 
+Note that this service needs to be run as root
+because it has to run command with other services
+depending on your needs.
+
 %prep
 %setup -q -c
 unzip consul.zip
@@ -113,8 +117,6 @@ echo >&2 "Please restart Consul for the UI changes to take effect."
 echo >&2 "Please restart Consul for the UI changes to take effect."
 
 %pre template
-getent passwd consul > /dev/null || /usr/sbin/useradd consul
-
 if [ -f /etc/init.d/consul-template ]
 then
    /etc/init.d/consul-template stop || true
@@ -167,7 +169,7 @@ fi
 %dir %{_sysconfdir}/consul-template.d
 /var/run/consul-template
 
-%attr(-,consul,consul) /var/log/consul-template
+/var/log/consul-template
 
 %config(noreplace) %{_sysconfdir}/consul-template.hcl
 
