@@ -69,12 +69,9 @@ start() {
 
 stop() {
     echo -n $"Shutting down $prog: "
-    ## graceful shutdown with consul leave (better than SIGINT as it waits)
-    $exec leave
+    ## graceful shutdown with consul-template (better than SIGINT as it waits)
+    killproc -p $pidfile $exec
     RETVAL=$?
-    echo
-    #still wait a second until shutdown is really complete
-    sleep 1
     [ $RETVAL -eq 0 ] && rm -f $lockfile2>&1
     return $RETVAL
 }
@@ -82,16 +79,6 @@ stop() {
 restart() {
     stop
     start
-}
-
-reload() {
-    echo -n $"Reloading $prog: "
-    killproc -p $pidfile $exec -HUP
-    echo
-}
-
-force_reload() {
-    restart
 }
 
 rh_status() {
@@ -114,13 +101,6 @@ case "$1" in
     restart)
         restart
         ;;
-    reload)
-        rh_status_q || exit 7
-        $1
-        ;;
-    force-reload)
-        force_reload
-        ;;
     status)
         rh_status
         ;;
@@ -129,7 +109,7 @@ case "$1" in
         restart
         ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
         exit 2
 esac
 
