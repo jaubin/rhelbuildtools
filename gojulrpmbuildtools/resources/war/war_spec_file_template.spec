@@ -35,7 +35,10 @@ if [ -f /etc/init.d/gojultomcat ]
 then
    /etc/init.d/gojultomcat stop || true
 fi
-[ -d %{_gojulcatalinabase}/webapps/@@WARNAME@@ ] && rm -rf %{_gojulcatalinabase}/webapps/@@WARNAME@@  
+if [ -d %{_gojulcatalinabase}/webapps/@@WARNAME@@ ]
+then
+   rm -rf %{_gojulcatalinabase}/webapps/@@WARNAME@@
+fi
 
 
 %preun
@@ -43,7 +46,10 @@ if [ -f /etc/init.d/gojultomcat ]
 then
    /etc/init.d/gojultomcat stop || true
 fi
-[ -d %{_gojulcatalinabase}/webapps/@@WARNAME@@ ] && rm -rf %{_gojulcatalinabase}/webapps/@@WARNAME@@  
+if [ -d %{_gojulcatalinabase}/webapps/@@WARNAME@@ ]
+then
+   rm -rf %{_gojulcatalinabase}/webapps/@@WARNAME@@
+fi
 
 
 
