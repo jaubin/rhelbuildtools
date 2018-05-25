@@ -31,6 +31,9 @@ SpringBoot service @@JARNAME@@
 mkdir -p %{buildroot}/%{_serviceinstalldir}
 cp @@JARNAME@@-spring-boot.jar %{buildroot}/%{_serviceinstalldir}
 
+mkdir -p %{buildroot}/etc/init.d
+cp @@JARNAME@@ %{buildroot}/etc/init.d
+
 mkdir -p %{buildroot}/%{_serviceconfdir}
 cp -r configApps/* %{buildroot}/%{_serviceconfdir} 
 
@@ -55,6 +58,7 @@ fi
 %files
 %defattr(-,root,root,-)
 
+/etc/init.d/@@JARNAME@@
 %{_serviceinstalldir}
 
 %dir %{_serviceconfdir} 

@@ -179,10 +179,10 @@ createOrUpdateApplicationProperties()
 }
 
 
-# Prepare the configApps directory for WAR file
-# warFile
+# Prepare the configApps directory for JAR file
+# jarFile
 # PARAMS :
-# - the WAR file name
+# - the JAR file name
 prepareConfigApps()
 {
    local jarFile="$1"
@@ -204,6 +204,21 @@ prepareConfigApps()
    createOrUpdateApplicationProperties "$jarFile"
 }
 
+# Prepare the daemon script for JAR fiel jarFile
+# PARAMS :
+# - the JAR file name 
+prepareDaemon()
+{
+   local jarFile="$1"
+   local jarName="$(getSpringBootJarName $jarFile)"
+ 
+   local targetDaemonFile="$(getRpmWorkSourceDir)/${jarName}"
+
+   cp "$SPRINGBOOT_RPM_TEMPLATES/daemon_template" "$targetDaemonFile"
+
+   sed -i "s/@@JARNAME@@/$jarName/g" $targetDaemonFile
+}
+
 # Prepare the tgz archive which will be the source.
 # PARAMS : 
 # - the jar file name
@@ -215,8 +230,8 @@ prepareArchive()
    local curDir=$(pwd)
    cd $(getRpmWorkSourceDir)
 
-   tar zcf ${jarName}.tgz configApps "${jarName}-spring-boot.jar"
-   rm -rf configApps "${jarName}-spring-boot.jar"
+   tar zcf ${jarName}.tgz configApps "$jarName" "${jarName}-spring-boot.jar"
+   rm -rf configApps "$jarName" "${jarName}-spring-boot.jar"
 
    cd $curDir
 }
@@ -234,6 +249,7 @@ createDirectoriesAndRpmBuildFiles()
    cp $jarFileName $(getRpmWorkSourceDir)
 
    prepareConfigApps "$jarFileName"
+   prepareDaemon "$jarFileName"
 
    prepareArchive "$jarFileName"
 }
