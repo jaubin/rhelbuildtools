@@ -29,7 +29,7 @@ JAR_FILE="/usr/lib/springboot/@@JARNAME@@/@@JARNAME@@-spring-boot.jar"
 prog="$JAVACMD"
 
 user="gojultomcat"
-pidfile="/var/run/springboot/@@JARNAME@@.pid"
+pidfile="/var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid"
 logfile="/var/log/springboot/@@JARNAME@@/@@JARNAME@@-console-output.log"
 conffile="/etc/springboot/@@JARNAME@@/application.properties"
 
