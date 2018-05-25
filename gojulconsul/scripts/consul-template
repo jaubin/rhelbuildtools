@@ -109,7 +109,7 @@ case "$1" in
         restart
         ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart}"
+        echo $"Usage: $0 {start|stop|status|restart|condrestart}"
         exit 2
 esac
 
