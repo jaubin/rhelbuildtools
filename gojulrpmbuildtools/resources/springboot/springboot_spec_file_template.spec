@@ -64,5 +64,5 @@ fi
 %dir %{_serviceconfdir} 
 %config(noreplace)  %{_serviceconfdir}/*
 
-%attr(644,gojultomcat,gojultomcat) /var/log/springboot/@@JARNAME@@
+%attr(755,gojultomcat,gojultomcat) /var/log/springboot/@@JARNAME@@
 /var/run/springboot/@@JARNAME@@

@@ -16,8 +16,8 @@
 # Should-Stop:
 # Default-Start: 2 3 4 5
 # Default-Stop:  0 1 6
-# Short-Description: Manage the @@WARNAME@@ service
-# Description: @@WARNAME@@ service
+# Short-Description: Manage the @@JARNAME@@ service
+# Description: @@JARNAME@@ service
 ### END INIT INFO
 
 # source function library
@@ -32,9 +32,6 @@ user="gojultomcat"
 pidfile="/var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid"
 logfile="/var/log/springboot/@@JARNAME@@/@@JARNAME@@-console-output.log"
 conffile="/etc/springboot/@@JARNAME@@/application.properties"
-
-# pull in sysconfig settings
-[ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
 export GOMAXPROCS=${GOMAXPROCS:-2}
 
@@ -83,6 +80,10 @@ restart() {
 
 rh_status() {
     status -p "$pidfile" @@JARNAME@@
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
 }
 
 case "$1" in
