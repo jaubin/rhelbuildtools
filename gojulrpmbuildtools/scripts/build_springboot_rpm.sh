@@ -172,7 +172,7 @@ createOrUpdateApplicationProperties()
 
    if [ -f "$applicationProperties" ]
    then
-       grep -e "^logging.config=" "$applicationProperties" && sed -i "s/^logging.config=.*/logging.config=${logbackFullLine}/g" || echo "${logbackFullLine}" >> "$applicationProperties"
+       grep -e "^logging.config=" "$applicationProperties" > /dev/null && sed -i "s!^logging.config=.*!${logbackFullLine}!g" "$applicationProperties" || echo "${logbackFullLine}" >> "$applicationProperties"
    else
        echo "$logbackFullLine" >> "$applicationProperties"
    fi    
@@ -195,7 +195,7 @@ prepareConfigApps()
  
    if [ -d "$sourceConfigAppsDir" ]
    then
-      cp -r $sourceConfigAppsDir $globalTargetConfigAppsDir
+      cp -r $sourceConfigAppsDir/* $globalTargetConfigAppsDir
    else
       mkdir -p $globalTargetConfigAppsDir
    fi
