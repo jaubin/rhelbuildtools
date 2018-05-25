@@ -6,7 +6,7 @@
 # description: @@JARNAME@@ service
 # processname: @@JARNAME@@
 # config: /etc/springboot/@@JARNAME@@/application.properties
-# pidfile: /var/run/springboot/@@JARNAME@@.pid
+# pidfile: /var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid
 
 ### BEGIN INIT INFO
 # Provides:       @@JARNAME@@

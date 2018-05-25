@@ -22,6 +22,7 @@ SpringBoot service @@JARNAME@@
 
 %global _serviceinstalldir /usr/lib/springboot/@@JARNAME@@/
 %global _serviceconfdir /etc/springboot/@@JARNAME@@/
+%global __jar_repack %{nil}
 
 %prep
 %setup -q -c
