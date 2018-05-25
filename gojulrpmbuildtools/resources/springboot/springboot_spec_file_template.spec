@@ -31,7 +31,8 @@ SpringBoot service @@JARNAME@@
 mkdir -p %{buildroot}/%{_serviceinstalldir}
 cp @@JARNAME@@-spring-boot.jar %{buildroot}/%{_serviceinstalldir}
 
-cp -r configApps %{buildroot}/%{_serviceconfdir} 
+mkdir -p %{buildroot}/%{_serviceconfdir}
+cp -r configApps/* %{buildroot}/%{_serviceconfdir} 
 
 mkdir -p %{buildroot}/var/{log,run}/springboot/@@JARNAME@@
 
@@ -57,7 +58,7 @@ fi
 %{_serviceinstalldir}
 
 %dir %{_serviceconfdir} 
-%config(noreplace)  %{_serviceconfdir}/@@JARNAME@@/*
+%config(noreplace)  %{_serviceconfdir}/*
 
 %attr(644,gojultomcat,gojultomcat) /var/log/springboot/@@JARNAME@@
 /var/run/springboot/@@JARNAME@@
