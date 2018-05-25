@@ -12,6 +12,7 @@ This project also embeds a Tomcat distribution, in order to ease your work when 
 
 * build_packages.sh : looks for all the RPM spec files which are exactly one level under the current directory, and builds the RPM.
 * build_war_rpm.sh : create a RPM for each of the WAR packages located under the current Maven project. A Tomcat distribution with configuration is included in this project so that the whole thing can be easily installed on any RHEL server.
+* build_springboot_rpm.sh : create a RPM for each of the Spring Boot packages (i.e. JAR files ending with -spring-boot.jar) under the current Maven project. These packages contain a daemon script and an externalized configuration under /etc/springboot.
 * publish_rpm.sh : publish a RPM package to the specified Maven repo. This one must be able to behave as a RPM repo. Nexus notably does.
 * create_release.sh : build the RPM packages, tag the SCM, increment the project versions and pushes the built RPM packages to the local maven repo.
 

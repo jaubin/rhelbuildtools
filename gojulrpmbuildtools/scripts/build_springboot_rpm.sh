@@ -18,8 +18,8 @@ usage()
       It looks for any SpringBoot JAR file found under the current directory
       and creates a RPM package for each of them. These files end with the -spring-boot.jar
       extension, so beware not to configure the spring-boot plugin to give them a fancy name. 
-      Each of the generated RPM files must be directly under Maven's target/ directory. However
-      it is a good idea to set up a build final name for this JAR.
+      However it is a good idea to set up a build final name for this JAR. Each of the generated 
+      RPM files must be directly under Maven's target/ directory. 
 
       If your SpringBoot JAR has configuration files they must be put under directory
       target/../src/main/configApps/<jarname_without_spring-boot-ext>. The tool will declare them
