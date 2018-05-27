@@ -38,6 +38,9 @@ cp @@JARNAME@@ %{buildroot}/etc/init.d
 mkdir -p %{buildroot}/%{_serviceconfdir}
 cp -r configApps/* %{buildroot}/%{_serviceconfdir} 
 
+mkdir -p %{buildroot}/etc/sysconfig/springboot/
+cp sysconfig %{buildroot}/etc/sysconfig/springboot/@@JARNAME@@
+
 mkdir -p %{buildroot}/var/{log,run}/springboot/@@JARNAME@@
 
 %pre
@@ -63,7 +66,8 @@ fi
 %{_serviceinstalldir}
 
 %dir %{_serviceconfdir} 
-%config(noreplace)  %{_serviceconfdir}/*
+%config(noreplace) %{_serviceconfdir}/*
+%config(noreplace) /etc/sysconfig/springboot/@@JARNAME@@
 
 %attr(755,gojultomcat,gojultomcat) /var/log/springboot/@@JARNAME@@
 /var/run/springboot/@@JARNAME@@

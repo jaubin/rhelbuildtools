@@ -35,6 +35,11 @@ conffile="/etc/springboot/@@JARNAME@@/application.properties"
 
 export GOMAXPROCS=${GOMAXPROCS:-2}
 
+if [ -f /etc/sysconfig/springboot/@@JARNAME@@ ]
+then
+    . /etc/sysconfig/springboot/@@JARNAME@@
+fi
+
 start() {
     [ -x $prog ] || exit 5
     
@@ -54,7 +59,7 @@ start() {
     daemon \
         --pidfile=$pidfile \
         --user=$user \
-        " { $JAVA_CMD -jar $JAR_FILE --spring.config.location=$conffile >> $logfile 2>&1 & } ; echo \$! >| $pidfile "
+        " { $JAVA_CMD $JAVA_OPTS -jar $JAR_FILE --spring.config.location=$conffile $PROGRAM_OPTS > $logfile 2>&1 & } ; echo \$! >| $pidfile "
     
     RETVAL=$?
     echo

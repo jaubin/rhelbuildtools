@@ -178,7 +178,6 @@ createOrUpdateApplicationProperties()
    fi    
 }
 
-
 # Prepare the configApps directory for JAR file
 # jarFile
 # PARAMS :
@@ -217,6 +216,13 @@ prepareDaemon()
    cp "$SPRINGBOOT_RPM_TEMPLATES/daemon_template" "$targetDaemonFile"
 
    sed -i "s/@@JARNAME@@/$jarName/g" $targetDaemonFile
+
+   local targetSysconfigFile="$(getRpmWorkSourceDir)/sysconfig"
+
+   cp "$SPRINGBOOT_RPM_TEMPLATES/sysconfig_template" "$targetSysconfigFile"
+
+   sed -i "s/@@JARNAME@@/$jarName/g" $targetSysconfigFile
+
 }
 
 # Prepare the tgz archive which will be the source.
@@ -230,8 +236,8 @@ prepareArchive()
    local curDir=$(pwd)
    cd $(getRpmWorkSourceDir)
 
-   tar zcf ${jarName}.tgz configApps "$jarName" "${jarName}-spring-boot.jar"
-   rm -rf configApps "$jarName" "${jarName}-spring-boot.jar"
+   tar zcf ${jarName}.tgz configApps "$jarName" sysconfig "${jarName}-spring-boot.jar"
+   rm -rf configApps "$jarName" sysconfig "${jarName}-spring-boot.jar"
 
    cd $curDir
 }

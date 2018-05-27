@@ -1,0 +1,9 @@
+# Put here the JVM options for process @@JARNAME@@.
+# Options include elements like -Xmx2G and so on
+JAVA_OPTS=""
+
+# Put there the additional parameters for process @@JARNAME@@.
+# Please refer to the project developers for the parameter list.
+# Note that these options must not specify the program configuration
+# file location, nor any output redirection.
+PROGRAM_OPTS=""
