@@ -1,0 +1,4 @@
+# Put in this file everything you need to customize the
+# Consul daemon. Syntax must follow the bash syntax.
+# You can also run shell commands from here even though
+# it is discouraged for safety reasons.

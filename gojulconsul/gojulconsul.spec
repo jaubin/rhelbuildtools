@@ -149,6 +149,7 @@ fi
 %attr(-,consul,consul) /var/log/consul
 
 %config(noreplace) %{_sysconfdir}/consul.json
+%config(noreplace) %{_sysconfdir}/sysconfig/consul
 
 %files ui
 %defattr(-,root,root,-)
@@ -172,5 +173,7 @@ fi
 /var/log/consul-template
 
 %config(noreplace) %{_sysconfdir}/consul-template.hcl
+%config(noreplace) %{_sysconfdir}/sysconfig/consul-template
+
 
 
