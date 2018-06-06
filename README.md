@@ -15,6 +15,7 @@ This project also embeds a Tomcat distribution, in order to ease your work when 
 * build_springboot_rpm.sh : create a RPM for each of the Spring Boot packages (i.e. JAR files ending with -spring-boot.jar) under the current Maven project. These packages contain a daemon script and an externalized configuration under /etc/springboot.
 * publish_rpm.sh : publish a RPM package to the specified Maven repo. This one must be able to behave as a RPM repo. Nexus notably does.
 * create_release.sh : build the RPM packages, tag the SCM, increment the project versions and pushes the built RPM packages to the local maven repo.
+* gojul_builder.sh : automatically detects the project type among the supported ones, and invokes the right build process. The goal here is to simplify building process especially within an integration server, as this server will need to launch the same command whatever the project.
 
 Each of these scripts includes a more detailed help. You can display it with the "-h" argument.
 
