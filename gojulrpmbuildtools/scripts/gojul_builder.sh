@@ -151,14 +151,14 @@ buildMavenForRelease()
 
    cd target/checkout
 
-   if [[ -n "$(isMavenWarProject)" ]]
-   then
-      infoLog "Found WAR project - building WAR RPMs"
-      build_war_rpm.sh
-   elif [[ -n "$(isMavenSpringBootProject)" ]]
+   if [[ -n "$(isMavenSpringBootProject)" ]]
    then
       infoLog "Found SpringBoot project - building Spring Boot RPMs"
       build_springboot_rpm.sh
+   elif [[ -n "$(isMavenWarProject)" ]]
+   then
+      infoLog "Found WAR project - building WAR RPMs"
+      build_war_rpm.sh
    else
       infoLog "No specific WAR or Spring Boot app found"
    fi
