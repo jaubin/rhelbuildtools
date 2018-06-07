@@ -27,12 +27,12 @@ performIncrement()
 
    local projectVersion=$(grep "^project.version=" project-info.properties)
    
-   local projectVersionPrefix=${projectVersion%[0-9]*}
+   local projectVersionPrefix=${projectVersion%.[0-9]*}
    local projectVersionSuffix=${projectVersion##*.}
 
    ((projectVersionSuffix++))
 
-   sed -i "s/^project.version=.*/${projectVersionPrefix}${projectVersionSuffix}/" project-info.properties
+   sed -i "s/^project.version=.*/${projectVersionPrefix}.${projectVersionSuffix}/" project-info.properties
 }
 
 performIncrement
