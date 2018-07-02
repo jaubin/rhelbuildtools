@@ -355,7 +355,7 @@ done
 
 %files kafka-libs
 %defattr(-,root,root,-)
-%{_bindir}/kafka-run-class
+%{_bindir}/kafka-run-class*
 %{_datadir}/doc/kafka
 %{_datadir}/java/kafka
 %dir %{_sysconfdir}/kafka
