@@ -24,7 +24,7 @@
 . /etc/rc.d/init.d/functions
 
 JAVA_CMD="/usr/lib/jvm/java-1.8.0/bin/java"
-JAR_FILE="/usr/lib/springboot/@@JARNAME@@/@@JARNAME@@-spring-boot.jar"
+JAR_FILE="/usr/share/springboot/@@JARNAME@@/@@JARNAME@@-spring-boot.jar"
 
 prog="$JAVACMD"
 
