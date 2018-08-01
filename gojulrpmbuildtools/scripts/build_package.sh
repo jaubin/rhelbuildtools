@@ -55,8 +55,6 @@ getSpecFileDirName()
    [[ -z $res ]] && exitWithError "No path found for SPEC FILE $specFilePath" 1
 
    echo $res
-
-
 }
 
 # Return the working directory of the RPM spec file to process.
@@ -68,7 +66,9 @@ getSpecFileDir()
 {
    local specFilePath=$1
 
-   echo "$(pwd)/target/$(getSpecFileDirName $specFilePath)"
+   local suffix="$(getSpecFileDirName $specFilePath)"
+   [ "$suffix" = . ] && suffix="" || suffix="/$suffix"
+   echo "$(pwd)/target${suffix}"
 }
 
 # Create the target directory layout for the RPM spec file to process.
@@ -95,9 +95,11 @@ createTargetDirectoryLayout()
 # - the project version
 getProjectVersion()
 {
-   [ -f project-info.properties ] || exitWithError "No project-info.properties found ! Aborting !" 5
+   local projTies="project-info.properties"
+   [ -f $projTies ] || projTies="../project-info.properties"
+   [ -f $projTies ] || exitWithError "No project-info.properties found ! Aborting !" 5
 
-   local res=$(grep "project.version=" project-info.properties | cut -d\= -f2)
+   local res=$(grep "project.version=" $projTies | cut -d\= -f2)
 
    [[ -z "$res" ]] && exitWithError "No project.version in project-info.properties found, aborting !" 3
 
@@ -140,7 +142,7 @@ createArchive()
    local specFileDirName=$(getSpecFileDirName $specFileName) 
 
 
-   tar zcf $specFileDir/SOURCES/$tarFileName $specFileDirName --transform "s|^$specFileDirName/||"
+   tar zcf $specFileDir/SOURCES/$tarFileName $specFileDirName --exclude=target --transform "s|^$specFileDirName/||"
 }
 
 # Create the RPM package
