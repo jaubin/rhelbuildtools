@@ -147,7 +147,7 @@ buildMavenForRelease()
    infoLog "Building Maven project for release purposes"
 
    cd "$CUR_DIR"
-   mvn -B clean release:prepare release:perform
+   mvn -B clean release:clean release:prepare release:perform
 
    cd target/checkout
 
