@@ -172,7 +172,7 @@ createOrUpdateApplicationProperties()
 
    if [ -f "$applicationProperties" ]
    then
-       grep -e "^logging.config=" "$applicationProperties" > /dev/null && sed -i "s!^logging.config=.*!${logbackFullLine}!g" "$applicationProperties" || echo "${logbackFullLine}" >> "$applicationProperties"
+       grep -e "^logging.config=" "$applicationProperties" > /dev/null && sed -i "s!^logging.config=.*!${logbackFullLine}!g" "$applicationProperties" || echo -e "\n\n${logbackFullLine}" >> "$applicationProperties"
    else
        echo "$logbackFullLine" >> "$applicationProperties"
    fi    
