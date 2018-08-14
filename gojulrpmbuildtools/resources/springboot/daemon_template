@@ -70,7 +70,7 @@ start() {
 stop() {
     echo -n $"Shutting down @@JARNAME@@: "
     ## graceful shutdown with consul leave (better than SIGINT as it waits)
-    $exec leave
+    killproc -p $pidfile
     RETVAL=$?
     echo
     #still wait a second until shutdown is really complete
