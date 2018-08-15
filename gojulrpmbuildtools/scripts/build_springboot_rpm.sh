@@ -85,7 +85,7 @@ getSpringBootJarName()
 {
   local jarFile="$1"
   local res=$(basename $jarFile "-spring-boot.jar")
-  [[ -z "$res" ]] && exitWithError "War file $jarFile does not seem to be a valid SpringBoot JAR" 1
+  [[ -z "$res" ]] && exitWithError "File $jarFile does not seem to be a valid SpringBoot JAR" 1
   echo $res
 }
 
