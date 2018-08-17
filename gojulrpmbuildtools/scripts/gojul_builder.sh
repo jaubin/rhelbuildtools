@@ -154,13 +154,21 @@ publishGeneratedRpms()
    done
 }
 
+# Return the version for a Maven project.
+# RETURNS :
+# - the version for a Maven project.
+getMavenProjectVersion()
+{
+   mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-SNAPSHOT//g" | sed -e "s/-/_/g"
+}
+
 # Build a Maven project for release purposes.
 buildMavenForRelease()
 {
    infoLog "Building Maven project for release purposes"
 
    cd "$CUR_DIR"
-   mvn -B clean release:clean release:prepare release:perform
+   mvn -B clean release:clean release:prepare release:perform -Dtag=$(getMavenProjectVersion)
 
    cd target/checkout
 
@@ -188,14 +196,6 @@ checkAnsibleStructureIfApplicable()
    then
       [ -f meta/main.yml ] || die "File meta/main.yml at the root of your repo is mandatory if your repo contains a playbook" 
    fi
-}
-
-# Return the version for a Maven project.
-# RETURNS :
-# - the version for a Maven project.
-getMavenProjectVersion()
-{
-   mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-/_/g"
 }
 
 # Return the project version for an RPM project.
