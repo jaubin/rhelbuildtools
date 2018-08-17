@@ -24,6 +24,10 @@ usage()
    * -h : print this help message
    * -r : create a release.
 
+   If the repo has an ansible subdirectory it will treat this subdirectory
+   as a playbook and perform substitutions of string {{lookup('env', 'PROJECT_VERSION')}}
+   with -<the_version> when tagging. The process is transparent to you. This way
+   you can version your Ansible playbooks alongside your projects themselves.
 EOF
 }
 
@@ -33,6 +37,15 @@ EOF
 infoLog()
 {
    echo >&2 "$1"
+}
+
+# Print an error message and exists.
+# PARAMS :
+# - the error message.
+die()
+{
+   infoLog "$1"
+   exit 255
 }
 
 # Return the RPM repo prefix if it exists,
@@ -166,6 +179,69 @@ buildMavenForRelease()
    publishGeneratedRpms
 }
 
+# If the current repo has an ansible sub-directory
+# check the mandatory files are there, otherwise does
+# nothing.
+checkAnsibleStructureIfApplicable()
+{
+   if [ -d ansible ]
+   then
+      [ -f meta/main.yml ] || die "File meta/main.yml at the root of your repo is mandatory if your repo contains a playbook" 
+   fi
+}
+
+# Return the version for a Maven project.
+# RETURNS :
+# - the version for a Maven project.
+getMavenProjectVersion()
+{
+   mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-/_/g"
+}
+
+# Return the project version for an RPM project.
+# RETURNS :
+# - the project version for an RPM project
+getRpmProjectVersion()
+{
+   grep "project.version=" project-info.properties | cut -d\= -f2 
+}
+
+# Prepare the Ansible module for tagging if applicable.
+# PARAMS :
+# - the project version
+prepareAnsibleForTaggingIfApplicable()
+{
+   local version="$1"
+   if [ -d ansible ]
+   then
+      local tmpDir=$(mktemp -d)
+      cp -r ansible/ $tmpDir
+      find ansible -type f -exec sed -i "s/[-]*\\s*{{\\s*lookup\\s*(\\s*'env'\\s*,\\s*'PROJECT_VERSION'\\s*)\\s*}}/-${version}/g" {} \; || true
+      git commit -a -m "Updated Ansible playbook package version to ${version}" > /dev/null || true
+      echo "$tmpDir"
+   else
+      echo ""   
+   fi
+}
+
+revertAnsiblePlaybookPackageVersion()
+{
+   local originalDir="$1"
+
+   if [ -n "$originalDir" ]
+   then
+      rm -rf ansible
+      cp -r "${originalDir}/ansible" .
+      rm -rf "$originalDir"
+      if git commit -a -m "Restored original playbook"
+      then
+         git push
+      else
+         infoLog "Nothing to commit"
+      fi
+   fi
+}
+
 # Build the project
 # PARAM :
 # - the project type.
@@ -177,7 +253,10 @@ buildProject()
    then
       build${projectType}ForDevelopment
    else
+      checkAnsibleStructureIfApplicable
+      local tmpDir=$(prepareAnsibleForTaggingIfApplicable $(get${projectType}ProjectVersion))
       build${projectType}ForRelease
+      revertAnsiblePlaybookPackageVersion "$tmpDir"
    fi
 }
 
