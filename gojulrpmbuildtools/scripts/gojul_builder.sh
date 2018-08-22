@@ -255,7 +255,10 @@ buildProject()
    else
       checkAnsibleStructureIfApplicable
       local tmpDir=$(prepareAnsibleForTaggingIfApplicable $(get${projectType}ProjectVersion))
-      build${projectType}ForRelease
+      build${projectType}ForRelease || {
+         revertAnsiblePlaybookPackageVersion "$tmpDir"
+         die "Build failed"
+      }
       revertAnsiblePlaybookPackageVersion "$tmpDir"
    fi
 }
