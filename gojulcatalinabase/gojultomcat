@@ -30,6 +30,8 @@ fi
 
 . /etc/rc.d/init.d/functions
 
+[ -d $(dirname "$CATALINA_PID") ] || mkdir -p $(dirname "$CATALINA_PID")
+
 start() 
 {
    rm -rf $CATALINA_BASE/temp/* $CATALINA_BASE/work/*

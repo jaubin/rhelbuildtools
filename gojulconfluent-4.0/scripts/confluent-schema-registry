@@ -27,6 +27,8 @@ else
     SU="/bin/su -s /bin/sh"
 fi
 
+[ -d $(dirname "$PIDFILE") ] || mkdir -p $(dirname "$PIDFILE")
+
 . /etc/rc.d/init.d/functions
 
 start() 

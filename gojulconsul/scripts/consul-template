@@ -32,6 +32,8 @@ logfile="/var/log/consul-template/$prog.log"
 conffile="/etc/consul-template.hcl"
 confdir="/etc/consul-template.d"
 
+[ -d $(dirname "$pidfile") ] || mkdir -p $(dirname "$pidfile")
+
 # pull in sysconfig settings
 [ -e /etc/sysconfig/$prog ] && . /etc/sysconfig/$prog
 
