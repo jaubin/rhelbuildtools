@@ -33,7 +33,7 @@ pidfile="/var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid"
 logfile="/var/log/springboot/@@JARNAME@@/@@JARNAME@@-console-output.log"
 conffile="/etc/springboot/@@JARNAME@@/application.properties"
 
-[ -d $(dirname "$pidfile") ] || mkdir -p "$pidfile"
+[ -d $(dirname "$pidfile") ] || mkdir -p $(dirname "$pidfile")
 
 export GOMAXPROCS=${GOMAXPROCS:-2}
 
