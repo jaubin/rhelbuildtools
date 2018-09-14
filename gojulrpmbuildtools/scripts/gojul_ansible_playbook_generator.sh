@@ -70,8 +70,8 @@ EOF
 auto_start_services: true
 EOF
 
-   mkdir -p ansible/meta
-   cat >ansible/meta/main.yml <<-EOF
+   mkdir -p meta
+   cat >meta/main.yml <<-EOF
 john: smith
 EOF
 

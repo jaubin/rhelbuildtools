@@ -84,7 +84,7 @@ buildRpmForDevelopment()
    infoLog "Building RPM project for development purposes"
    cd "$CUR_DIR"
 
-   build_packages.sh
+   $SCRIPT_DIR/build_packages.sh
 }
 
 # Build RPM project for release
@@ -97,7 +97,7 @@ buildRpmForRelease()
    local rpmRepoPrefix=$(getRpmRepoPrefix)
    [[ -z "$rpmRepoPrefix" ]] && infoLog "Packages won't be put under a sub-repo of the repo you've set up" || infoLog "Packages will be put under the subrepo $rpmRepoPrefix of the repo you've set up"
 
-   create_rpm_release.sh "$rpmRepoPrefix"
+   $SCRIPT_DIR/create_rpm_release.sh "$rpmRepoPrefix"
 }
 
 # Return true if the project is a Maven project,
@@ -150,7 +150,7 @@ publishGeneratedRpms()
 
    for i in $(find . -type f -name "*.rpm"|grep "rpmResults")
    do
-       publish_rpm.sh "$i" "$rpmRepoPrefix"
+       $SCRIPT_DIR/publish_rpm.sh "$i" "$rpmRepoPrefix"
    done
 }
 
@@ -159,7 +159,20 @@ publishGeneratedRpms()
 # - the version for a Maven project.
 getMavenProjectName()
 {
-   mvn -q -Dexec.executable="echo" -Dexec.args='${project.name}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec
+   cd "$CUR_DIR"
+
+   if [[ -n "$(isMavenSpringBootProject)" ]]
+   then
+      local pomFile=$(grep -l '<artifactId>spring-boot-maven-plugin</artifactId' $(find . -name "pom.xml") | head -1)
+      if [ -n "$pomFile" ]
+      then
+         mvn -f "$pomFile" -q -Dexec.executable="echo" -Dexec.args='${project.name}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec
+      else
+         echo ""
+      fi
+   else
+      echo ""
+   fi
 }
 
 # Return the version for a Maven project.
@@ -183,11 +196,11 @@ buildMavenForRelease()
    if [[ -n "$(isMavenSpringBootProject)" ]]
    then
       infoLog "Found SpringBoot project - building Spring Boot RPMs"
-      build_springboot_rpm.sh
+      $SCRIPT_DIR/build_springboot_rpm.sh
    elif [[ -n "$(isMavenWarProject)" ]]
    then
       infoLog "Found WAR project - building WAR RPMs"
-      build_war_rpm.sh
+      $SCRIPT_DIR/build_war_rpm.sh
    else
       infoLog "No specific WAR or Spring Boot app found"
    fi
@@ -231,7 +244,7 @@ prepareAnsibleForTaggingIfApplicable()
    local version="$2"
    if [ -n "$name" ]
    then
-      gojul_ansible_playbook_generator.sh "$name" "$version"
+      $SCRIPT_DIR/gojul_ansible_playbook_generator.sh "$name" "$version"
    fi	   
 
    if [ -d ansible ]
