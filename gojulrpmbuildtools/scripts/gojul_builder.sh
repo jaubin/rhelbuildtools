@@ -159,7 +159,7 @@ publishGeneratedRpms()
 # - the version for a Maven project.
 getMavenProjectName()
 {
-   mvn -q -Dexec.executable="echo" -Dexec.args='${project.name}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-SNAPSHOT//g" | sed -e "s/-/_/g"
+   mvn -q -Dexec.executable="echo" -Dexec.args='${project.name}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec
 }
 
 # Return the version for a Maven project.
