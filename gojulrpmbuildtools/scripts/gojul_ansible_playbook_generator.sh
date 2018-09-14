@@ -134,18 +134,67 @@ EOF
 # - the module name
 generateConfigTemplates()
 {
-  local moduleName="$1"
+   local moduleName="$1"
 
-  [ -f "$ANSIBLE_MAPPINGS" ] || return 0
+   [ -f "$ANSIBLE_MAPPINGS" ] || return 0
 
-  cat "$ANSIBLE_MAPPINGS" | while read line
-  do
-     addTemplateLine "$moduleName" "$line"
-  done
+   cat "$ANSIBLE_MAPPINGS" | while read line
+   do
+      addTemplateLine "$moduleName" "$line"
+   done
 }
 
+# Generate the service line
+# PARAMS:
+# - the module name
+generateServiceLine()
+{
+   local moduleName="$1"
 
+   cat >>$(getTasksFile "$moduleName") <<-EOF
+- name: Start service $moduleName
+  service:
+    name: $serviceName
+    enabled: yes
+    state: started
+  when: auto_start_services  
+EOF
+}
 
-createPlaybookBasicStructure "$1"
-generateInstallLine "$1" "$2"
-generateConfigTemplates "$1"
+# Generate the whole playbook.
+# PARAMS:
+# - the module name
+# - the module version
+generatePlaybook()
+{
+   local moduleName="$1"
+   local moduleVersion="$2"
+
+   createPlaybookBasicStructure "$moduleName"
+   generateInstallLine "$moduleName" "$moduleVersion"
+   generateConfigTemplates "$moduleName"
+   generateServiceLine "$moduleName"
+}
+
+if [ "$1" == "-h" ]
+then
+   usage
+   exit 0
+elif [ $# -ne 2 ]
+then
+   usage
+   die "Bad argument count !"
+fi
+
+if [ -d ansible ]
+then
+   infoLog "A playbook already exists for this module - skipping generation"
+   exit 0
+fi
+[ -f "$ANSIBLE_MAPPINGS" ] || {
+   infoLog "No file $ANSIBLE_MAPPINGS found - assuming this module does not need a playbook"
+   exit 0
+}
+
+generatePlaybook "$1" "$2"
+
