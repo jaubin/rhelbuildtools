@@ -157,6 +157,14 @@ publishGeneratedRpms()
 # Return the version for a Maven project.
 # RETURNS :
 # - the version for a Maven project.
+getMavenProjectName()
+{
+   mvn -q -Dexec.executable="echo" -Dexec.args='${project.name}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-SNAPSHOT//g" | sed -e "s/-/_/g"
+}
+
+# Return the version for a Maven project.
+# RETURNS :
+# - the version for a Maven project.
 getMavenProjectVersion()
 {
    mvn -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec | sed -e "s/-SNAPSHOT//g" | sed -e "s/-/_/g"
@@ -198,6 +206,14 @@ checkAnsibleStructureIfApplicable()
    fi
 }
 
+# Return the name for an RPM project
+# RETURNS :
+# - nothing - this is not supported 
+getRpmProjectName()
+{
+   echo ""
+}
+
 # Return the project version for an RPM project.
 # RETURNS :
 # - the project version for an RPM project
@@ -211,7 +227,13 @@ getRpmProjectVersion()
 # - the project version
 prepareAnsibleForTaggingIfApplicable()
 {
-   local version="$1"
+   local name="$1"
+   local version="$2"
+   if [ -n "$name" ]
+   then
+      gojul_ansible_playbook_generator.sh "$name" "$version"
+   fi	   
+
    if [ -d ansible ]
    then
       local tmpDir=$(mktemp -d)
@@ -233,6 +255,10 @@ revertAnsiblePlaybookPackageVersion()
       rm -rf ansible
       cp -r "${originalDir}/ansible" .
       rm -rf "$originalDir"
+      if [ -f ansible/.playbook_gojul_generated ]
+      then
+         git rm -r ansible meta
+      fi	      
       if git commit -a -m "Restored original playbook"
       then
          git push
@@ -254,7 +280,7 @@ buildProject()
       build${projectType}ForDevelopment
    else
       checkAnsibleStructureIfApplicable
-      local tmpDir=$(prepareAnsibleForTaggingIfApplicable $(get${projectType}ProjectVersion))
+      local tmpDir=$(prepareAnsibleForTaggingIfApplicable $(get${projectType}ProjectName) $(get${projectType}ProjectVersion))
       build${projectType}ForRelease || {
          revertAnsiblePlaybookPackageVersion "$tmpDir"
          die "Build failed"

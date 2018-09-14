@@ -174,6 +174,11 @@ generatePlaybook()
    generateInstallLine "$moduleName" "$moduleVersion"
    generateConfigTemplates "$moduleName"
    generateServiceLine "$moduleName"
+
+   if [ -f .git/config ]
+   then
+      git add ansible meta
+   fi
 }
 
 if [ "$1" == "-h" ]
