@@ -5,7 +5,6 @@ set -e
 SCRIPT_NAME=$(basename $0)
 
 ANSIBLE_TEMPLATES_DIR="ansibleTemplates/"
-ANSIBLE_MAPPINGS="${ANSIBLE_TEMPLATES_DIR}/ansible_mappings.txt"
 
 # Print a usage hint on this script
 usage()
@@ -14,14 +13,15 @@ usage()
 
    USAGE: $SCRIPT_NAME [-h] <moduleName> <version>
 
-   This script generates an Ansible playbook if it finds under the
-   current directory the file ansibleTemplates/ansible_mappings.txt.
+   This script generates an Ansible playbook if it finds under subdirectory
+   $ANSIBLE_TEMPLATES_DIR template files.
 
-   Its purpose is to be used with auto-generated spring boot RPM packages
-   and other stuff like this.
-
-   This file must be structured as follows :
-   <templateName>=<destinationFile>
+   The $ANSIBLE_TEMPLATES_DIR directory must contain at least one of the following
+   directories :
+   - appSettings : the application settings, which go under /etc/gojuldaemons/<module_name>/
+   - sysconfig : the daemon configuration for SpringBoot daemons, which go under /etc/sysconfig/gojuldaemons.
+   Note that you should only put one file per daemon, which actually matches the daemon name.
+   - systemd : the SystemD configuration files, whih go under /etc/systemd/system/<module_name>.service.d/
 
    It takes the following parameters into account :
    - -h : print this help message
@@ -107,26 +107,46 @@ EOF
 # Add a package template line
 # PARAMS :
 # - the module name
-# - the line to process
+# - the template file
+# - the remote target path 
 addTemplateLine()
 {
    local moduleName="$1"
-   local lineToProcess=$(echo "$2"|sed -e 's/\s*#.*//g')
+   local templateFile="$2"
+   local targetPath="$3"
 
-   [ -n "$lineToProcess" ] || return 0
+   cp "${templateFile}" "ansible/roles/${moduleName}/templates"
 
-   local templateFile=$(echo "$lineToProcess"|cut -d= -f1)
-   local targetFile=$(echo "$lineToProcess"|cut -d= -f2)
-
-   cp "${ANSIBLE_TEMPLATES_DIR}/${templateFile}" "ansible/roles/${moduleName}/templates"
+   local targetFile="${targetPath}/$(basename $templateFile .j2)"
 
    cat >>$(getTasksFile "$moduleName") <<-EOF
 - name: Upload file $targetFile for package $moduleName
   template:
-    src: $templateFile
+    src: $(basename $templateFile)
     dest: $targetFile
 
 EOF
+}
+
+# Add template lines for all
+# the files located under the directory
+# specified under the directory specified.
+# PARAMS :
+# - the module name
+# - the source directory
+# - the remote target path
+addTemplateLines()
+{
+   local moduleName="$1"
+   local sourceDir="$2"
+   local targetPath="$3"
+
+   [ -d "$sourceDir" ] || return 0
+
+   for i in $(ls "$sourceDir")
+   do
+      addTemplateLine "$moduleName" "${sourceDir}/${i}" "$targetPath"
+   done
 }
 
 # Generate the configuration template lines
@@ -136,12 +156,10 @@ generateConfigTemplates()
 {
    local moduleName="$1"
 
-   [ -f "$ANSIBLE_MAPPINGS" ] || return 0
+   addTemplateLines "$moduleName" "${ANSIBLE_TEMPLATES_DIR}/appSettings" "/etc/gojuldaemons/${moduleName}"
+   addTemplateLines "$moduleName" "${ANSIBLE_TEMPLATES_DIR}/sysconfig" "/etc/sysconfig/gojuldaemons"
+   addTemplateLines "$moduleName" "${ANSIBLE_TEMPLATES_DIR}/systemd" "/etc/systemd/system/${moduleName}.service.d"
 
-   cat "$ANSIBLE_MAPPINGS" | while read line
-   do
-      addTemplateLine "$moduleName" "$line"
-   done
 }
 
 # Generate the service line
@@ -196,8 +214,8 @@ then
    infoLog "A playbook already exists for this module - skipping generation"
    exit 0
 fi
-[ -f "$ANSIBLE_MAPPINGS" ] || {
-   infoLog "No file $ANSIBLE_MAPPINGS found - assuming this module does not need a playbook"
+[ -d "$ANSIBLE_TEMPLATES_DIR" ] || {
+   infoLog "No directory $ANSIBLE_TEMPLATES_DIR found - assuming this module does not need a playbook"
    exit 0
 }
 
