@@ -24,7 +24,7 @@ usage()
       If your SpringBoot JAR has configuration files they must be put under directory
       target/../src/main/configApps/<jarname_without_spring-boot-ext>. The tool will declare them
       as RPM configuration files and package them under directory
-      /etc/springboot/<jar-name>/
+      /etc/gojuldaemons/<jar-name>/
 
 EOF
 }
@@ -167,7 +167,7 @@ createOrUpdateApplicationProperties()
    local jarName="$(getSpringBootJarName $jarFile)"
  
    local applicationProperties="$(getConfigAppsDir $jarFile)/application.properties"
-   local logbackTargetLocation="/etc/springboot/${jarName}/logback.xml"
+   local logbackTargetLocation="/etc/gojuldaemons/${jarName}/logback.xml"
    local logbackFullLine="logging.config=$logbackTargetLocation"
 
    if [ -f "$applicationProperties" ]

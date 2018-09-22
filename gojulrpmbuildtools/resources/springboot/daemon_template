@@ -5,8 +5,8 @@
 # chkconfig:   2345 90 10
 # description: @@JARNAME@@ service
 # processname: @@JARNAME@@
-# config: /etc/springboot/@@JARNAME@@/application.properties
-# pidfile: /var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid
+# config: /etc/gojuldaemons/@@JARNAME@@/application.properties
+# pidfile: /var/run/gojuldaemons/@@JARNAME@@/@@JARNAME@@.pid
 
 ### BEGIN INIT INFO
 # Provides:       @@JARNAME@@
@@ -24,22 +24,22 @@
 . /etc/rc.d/init.d/functions
 
 JAVA_CMD="/usr/lib/jvm/java-1.8.0/bin/java"
-JAR_FILE="/usr/share/springboot/@@JARNAME@@/@@JARNAME@@-spring-boot.jar"
+JAR_FILE="/usr/share/gojuldaemons/@@JARNAME@@/@@JARNAME@@-spring-boot.jar"
 
 prog="$JAVACMD"
 
 user="gojultomcat"
-pidfile="/var/run/springboot/@@JARNAME@@/@@JARNAME@@.pid"
-logfile="/var/log/springboot/@@JARNAME@@/@@JARNAME@@-console-output.log"
-conffile="/etc/springboot/@@JARNAME@@/application.properties"
+pidfile="/var/run/gojuldaemons/@@JARNAME@@/@@JARNAME@@.pid"
+logfile="/var/log/gojuldaemons/@@JARNAME@@/@@JARNAME@@-console-output.log"
+conffile="/etc/gojuldaemons/@@JARNAME@@/application.properties"
 
 [ -d $(dirname "$pidfile") ] || mkdir -p $(dirname "$pidfile")
 
 export GOMAXPROCS=${GOMAXPROCS:-2}
 
-if [ -f /etc/sysconfig/springboot/@@JARNAME@@ ]
+if [ -f /etc/sysconfig/gojuldaemons/@@JARNAME@@ ]
 then
-    . /etc/sysconfig/springboot/@@JARNAME@@
+    . /etc/sysconfig/gojuldaemons/@@JARNAME@@
 fi
 
 start() {

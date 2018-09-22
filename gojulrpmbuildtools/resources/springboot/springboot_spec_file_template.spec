@@ -3,7 +3,7 @@ Version:        @@JARVERSION@@
 Release:	1%{?dist}
 Summary:	Service @@JARNAME@@
 
-Group:		org.gojul.gojulspringboot
+Group:		org.gojul.gojulgojuldaemons
 License:	GPL
 URL:		https://www.github.com/gojul/gojulrpmbuildtools
 Source0:	@@JARNAME@@.tgz
@@ -20,8 +20,8 @@ Requires:       shadow-utils
 %description
 SpringBoot service @@JARNAME@@
 
-%global _serviceinstalldir /usr/share/springboot/@@JARNAME@@/
-%global _serviceconfdir /etc/springboot/@@JARNAME@@/
+%global _serviceinstalldir /usr/share/gojuldaemons/@@JARNAME@@/
+%global _serviceconfdir /etc/gojuldaemons/@@JARNAME@@/
 %global __jar_repack %{nil}
 
 %prep
@@ -38,10 +38,10 @@ cp @@JARNAME@@ %{buildroot}/etc/init.d
 mkdir -p %{buildroot}/%{_serviceconfdir}
 cp -r configApps/* %{buildroot}/%{_serviceconfdir} 
 
-mkdir -p %{buildroot}/etc/sysconfig/springboot/
-cp sysconfig %{buildroot}/etc/sysconfig/springboot/@@JARNAME@@
+mkdir -p %{buildroot}/etc/sysconfig/gojuldaemons/
+cp sysconfig %{buildroot}/etc/sysconfig/gojuldaemons/@@JARNAME@@
 
-mkdir -p %{buildroot}/var/{log,run}/springboot/@@JARNAME@@
+mkdir -p %{buildroot}/var/{log,run}/gojuldaemons/@@JARNAME@@
 
 %pre
 
@@ -67,7 +67,7 @@ fi
 
 %dir %{_serviceconfdir} 
 %config(noreplace) %{_serviceconfdir}/*
-%config(noreplace) /etc/sysconfig/springboot/@@JARNAME@@
+%config(noreplace) /etc/sysconfig/gojuldaemons/@@JARNAME@@
 
-%attr(755,gojultomcat,gojultomcat) /var/log/springboot/@@JARNAME@@
-/var/run/springboot/@@JARNAME@@
+%attr(755,gojultomcat,gojultomcat) /var/log/gojuldaemons/@@JARNAME@@
+/var/run/gojuldaemons/@@JARNAME@@
