@@ -143,6 +143,15 @@ addTemplateLines()
 
    [ -d "$sourceDir" ] || return 0
 
+   cat >>$(getTasksFile "$moduleName") <<-EOF
+- name: Ensure directory ${targetPath} exists 
+  file:
+    path: $targetPath
+    state: directory
+    recurse: yes
+
+EOF
+
    for i in $(ls "$sourceDir")
    do
       addTemplateLine "$moduleName" "${sourceDir}/${i}" "$targetPath"
