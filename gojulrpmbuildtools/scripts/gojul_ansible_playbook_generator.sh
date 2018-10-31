@@ -181,7 +181,7 @@ generateServiceLine()
    cat >>$(getTasksFile "$moduleName") <<-EOF
 - name: Start service $moduleName
   service:
-    name: $serviceName
+    name: $moduleName
     enabled: yes
     state: started
   when: auto_start_services  
