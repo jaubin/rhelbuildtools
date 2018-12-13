@@ -180,10 +180,11 @@ generateServiceLine()
 
    cat >>$(getTasksFile "$moduleName") <<-EOF
 - name: Start service $moduleName
-  service:
+  systemd:
     name: $moduleName
     enabled: yes
-    state: started
+    state: restarted
+    daemon_reload: yes
   when: auto_start_services  
 EOF
 }
