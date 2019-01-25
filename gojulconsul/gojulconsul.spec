@@ -94,19 +94,19 @@ getent passwd consul > /dev/null || /usr/sbin/useradd consul
 
 if [ -f /etc/init.d/consul ]
 then
-   /etc/init.d/consul stop || true
+   /etc/init.d/consul stop || true
 fi
 
 %post
 if [ "$1" == 0 ]
 then
-   chkconfig --add /etc/init.d/consul || true
+   chkconfig --add /etc/init.d/consul || true
 fi
 
 %preun
 if [ "$1" == 0 ]
 then
-   /etc/init.d/consul stop || true
+   /etc/init.d/consul stop || true
    chkconfig --del /etc/init.d/consul || true
 fi
 
@@ -119,19 +119,19 @@ echo >&2 "Please restart Consul for the UI changes to take effect."
 %pre template
 if [ -f /etc/init.d/consul-template ]
 then
-   /etc/init.d/consul-template stop || true
+   /etc/init.d/consul-template stop || true
 fi
 
 %post template
 if [ "$1" == 0 ]
 then
-   chkconfig --add /etc/init.d/consul-template || true
+   chkconfig --add /etc/init.d/consul-template || true
 fi
 
 %preun template
 if [ "$1" == 0 ]
 then
-   /etc/init.d/consul-template stop || true
+   /etc/init.d/consul-template stop || true
    chkconfig --del /etc/init.d/consul-template || true
 fi
 
@@ -150,6 +150,7 @@ fi
 
 %config(noreplace) %{_sysconfdir}/consul.json
 %config(noreplace) %{_sysconfdir}/sysconfig/consul
+%config(noreplace) %{_sysconfdir}/logrotate.d/consul
 
 %files ui
 %defattr(-,root,root,-)
