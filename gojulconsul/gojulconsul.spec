@@ -16,6 +16,8 @@ Requires:       filesystem
 Requires:       initscripts
 Requires:       shadow-utils
 
+%global __versrel %{version}-%{release}
+
 %description
 Consul is a schema registry widely used in microservices architectures. Unfortunately
 HashiCorp does not feature official RPM packages. This unofficial package attempts to
@@ -26,8 +28,8 @@ https://github.com/hypoport/consul-rpm-rhel6/
 
 %package ui
 Summary: Consul Web UI
-Requires: consul
-Requires: consul-server
+Requires: consul = %{__versrel}
+Requires: consul-server = %{__versrel}
 
 %description ui
 Consul UI enables Consul's server Web UI. It can be reached
@@ -39,7 +41,7 @@ Consul for the changes to take effect.
 
 %package client 
 Summary: Consul Client mode
-Requires: consul
+Requires: consul = %{__versrel}
 Conflicts: consul-ui
 
 %description client
@@ -48,7 +50,7 @@ is very useful for example when used with consul-template.
 
 %package server 
 Summary: Consul Server mode
-Requires: consul
+Requires: consul = %{__versrel}
 Conflicts: consul-client
 
 %description server 
@@ -58,7 +60,7 @@ a single Consul instance is running.
 
 %package template
 Summary: Consul template daemon
-Requires: consul-client
+Requires: consul-client = %{__versrel}
 
 %description template
 Consul template is a useful tool for generating
@@ -175,6 +177,7 @@ fi
 
 %config(noreplace) %{_sysconfdir}/consul-template.hcl
 %config(noreplace) %{_sysconfdir}/sysconfig/consul-template
+%config(noreplace) %{_sysconfdir}/logrotate.d/consul-template
 
 
 
