@@ -19,6 +19,7 @@ usage()
    As of now supported project types are :
    - RPM projects (i.e. projects with RPM builds)
    - Java Maven projects, with the system attempting to create RPM packages for WAR and Spring Boot apps.
+   - Custom projects, the ones which have a build.sh script at their root. This one must take the "-r" parameter into account for builds in release mode.
 
    This script takes the following optional parameters into account :
    * -h : print this help message
@@ -302,6 +303,15 @@ buildProject()
    fi
 }
 
+# Return true if we're in a custom build, false otherwise.
+# RETURNS:
+# - true if we're in a custom build, false otherwise.
+isCustomProject()
+{
+   cd "$CUR_DIR"
+   [ -f build.sh ] && echo "Custom" || echo ""
+}
+
 if [ "$1" == "-h" ]
 then
    usage
@@ -316,7 +326,15 @@ then
    exit 1
 fi
 
-if [[ -n "$(isMavenProject)" ]]
+if [[ -n "$(isCustomProject)" ]]
+then
+   if [[ -z "$RELEASE_MODE" ]]
+   then
+      sh "${CUR_DIR}/build.sh"
+   else
+      sh "${CUR_DIR}/build.sh" -r
+   fi
+elif [[ -n "$(isMavenProject)" ]]
 then
    buildProject "Maven"
 elif [[ -n "$(isRpmProject)" ]]
