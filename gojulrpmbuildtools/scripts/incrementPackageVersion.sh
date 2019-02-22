@@ -18,6 +18,10 @@ usage()
    in the current directory and increment the project.version entry
    by one on its last digit.
 
+   Note that it does nothing if the version string contains a dash,
+   as those version strings are often related to unstable versions
+   according to SEMVER standards.
+
 EOF
 }
 
@@ -27,6 +31,12 @@ performIncrement()
 
    local projectVersion=$(grep "^project.version=" project-info.properties)
    
+   if [[ "$projectVersion" == *"-"* ]]
+   then
+      echo >&2 "Found an unstable version according to SEMVER spec - not performing any incrementation"
+      exit 0
+   fi
+
    local projectVersionPrefix=${projectVersion%.[0-9]*}
    local projectVersionSuffix=${projectVersion##*.}
 
