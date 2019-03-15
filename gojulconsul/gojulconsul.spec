@@ -55,12 +55,22 @@ Conflicts: consul-client
 
 %description server 
 Consul server enables Consul's server mode. This 
-package is optional and should only be used when
-a single Consul instance is running.
+package is is to be used for cluster Consul instances,
+i.e. not clients.
+
+%package standalone
+Summary: Consul Standalone mode
+Requires: consul = %{__versrel}
+Conflicts: consul-client
+Conflicts: consul-server
+
+%description standalone
+Consul standalone enables to work in standalone mode,
+i.e. with a single server instance running.
 
 %package template
 Summary: Consul template daemon
-Requires: consul-client = %{__versrel}
+Requires: consul = %{__versrel}
 
 %description template
 Consul template is a useful tool for generating
@@ -165,6 +175,10 @@ fi
 %files server 
 %defattr(-,root,root,-)
 %{_sysconfdir}/consul.d/consul-server.json
+
+%files standalone
+%defattr(-,root,root,-)
+%{_sysconfdir}/consul.d/consul-standalone.json
 
 %files template
 %defattr(-,root,root,-)
