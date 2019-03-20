@@ -1,4 +1,4 @@
 {
-   "bootstrap": true,
+   "bootstrap_expect": 1,
    "server": true
 }
