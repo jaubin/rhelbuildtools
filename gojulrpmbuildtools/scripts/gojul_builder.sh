@@ -12,7 +12,7 @@ usage()
 {
    cat >&2 <<-EOF
 
-   Usage: $SCRIPT_NAME [-r|-h]
+   Usage: $SCRIPT_NAME [-r|-h|-s]
 
    This program automatically detects your project type and invokes
    the proper builder accordingly.
@@ -24,6 +24,9 @@ usage()
    This script takes the following optional parameters into account :
    * -h : print this help message
    * -r : create a release.
+   * -s : launch Sonar on the release. Note that we assume there that you have set up properly Sonar settings. For Maven projects this must be done in the POM file.
+
+   Note that options -r and -s are mutually exclusive.
 
    If the repo has an ansible subdirectory it will treat this subdirectory
    as a playbook and perform substitutions of string {{lookup('env', 'PROJECT_VERSION')}}
@@ -282,6 +285,18 @@ revertAnsiblePlaybookPackageVersion()
    fi
 }
 
+# Run Sonar on a Maven project.
+runSonarForMaven()
+{
+   mvn clean verify package sonar:sonar
+}
+
+# Run Sonar on a RPM project
+runSonarForRpm()
+{
+   infoLog "Unsupported project type for Sonar Analysis : RPM"
+}
+
 # Build the project
 # PARAM :
 # - the project type.
@@ -289,7 +304,10 @@ buildProject()
 {
    local projectType="$1"
 
-   if [[ -z "$RELEASE_MODE" ]]
+   if [[ -n "$SONAR_MODE" ]]
+   then
+      runSonarFor${projectType}
+   elif [[ -z "$RELEASE_MODE" ]]
    then
       build${projectType}ForDevelopment
    else
@@ -319,6 +337,9 @@ then
 elif [ "$1" == "-r" ]
 then
    RELEASE_MODE=1
+elif [ "$1" == "-s" ]
+then
+   SONAR_MODE=1
 elif [ $# -ne 0 ]
 then
    infoLog "Bad argument count or invalid argument !"
