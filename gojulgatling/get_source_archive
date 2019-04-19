@@ -1,0 +1,9 @@
+#!/bin/bash
+
+CURDIR=$(dirname $0)
+TARGETFILE="${CURDIR}/gatling.zip"
+
+if [ ! -f "$TARGETFILE" ]
+then
+   wget https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/3.1.1/gatling-charts-highcharts-bundle-3.1.1-bundle.zip -O "$TARGETFILE"
+fi
