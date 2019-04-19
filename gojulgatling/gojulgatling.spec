@@ -38,6 +38,7 @@ make install DESTDIR=%{buildroot}
 mkdir -p %{buildroot}/%{gatling_dir}
 mv gatling*/* %{buildroot}/%{gatling_dir}
 chmod a+x %{buildroot}/%{gatling_dir}/bin/*.sh
+# Dirty trick because of some compilation at startup.
 mkdir -p %{buildroot}/%{gatling_dir}/target
 chmod 777 %{buildroot}/%{gatling_dir}/target
 
