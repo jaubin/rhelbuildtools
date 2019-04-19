@@ -8,6 +8,7 @@ License:	GPL
 URL:		https://www.github.com/gojul/gojulrpmbuildtools
 Source0:	gatling.tgz
 
+BuildRequires:  coreutils
 BuildRequires:	gojulrpmbuildtools
 BuildRequires:  unzip
 
@@ -39,7 +40,6 @@ mv gatling*/* %{buildroot}/%{gatling_dir}
 chmod a+x %{buildroot}/%{gatling_dir}/bin/*.sh
 mkdir -p %{buildroot}/%{gatling_dir}/target
 chmod 777 %{buildroot}/%{gatling_dir}/target
-chmod a+x %{buildroot}/%{gatling_dir}/target
 
 rm -rf %{buildroot}/%{gatling_dir}/conf 
 ln -s %{gatling_conf_dir} %{buildroot}/%{gatling_dir}/conf
