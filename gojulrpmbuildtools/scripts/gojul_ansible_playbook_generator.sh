@@ -60,6 +60,7 @@ createPlaybookBasicStructure()
    mkdir -p ansible/roles/${moduleName}/{tasks,templates,defaults}
    cat >ansible/playbook.yml <<-EOF
 - hosts: $moduleName
+  serial: "50%"
   roles:
   - { role: $moduleName }
 EOF
