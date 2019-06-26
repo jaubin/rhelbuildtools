@@ -1,4 +1,4 @@
-/var/log/consul {
+/var/log/consul/*.log {
     maxsize 50M
     daily
     missingok
