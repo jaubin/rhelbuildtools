@@ -1,4 +1,5 @@
 /var/log/consul-template {
+    maxsize 50M
     daily
     missingok
     rotate 7
