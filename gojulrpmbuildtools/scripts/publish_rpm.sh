@@ -73,7 +73,7 @@ getRpmName()
 # - the version of the RPM package
 getRpmVersion()
 {
-   rpm -qp --qf "%{VERSION}\n" $1
+   rpm -qp --qf "%{VERSION}.%{RELEASE}\n" $1
 }
 
 # Return the URL of the Maven repository used.
