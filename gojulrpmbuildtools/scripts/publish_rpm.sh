@@ -50,6 +50,7 @@ getRpmGroup()
 {
    local prefix="$2"
    local group=$(rpm -qp --qf "%{GROUP}\n" $1)
+   group=${group//\//.}
 
    [[ -z "$prefix" ]] && echo "$group" || echo "${prefix}.${group}"
 }
