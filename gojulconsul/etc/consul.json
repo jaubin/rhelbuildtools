@@ -1,3 +1,5 @@
 { 
-  "data_dir": "/var/lib/consul"
+  "data_dir": "/var/lib/consul",
+  "skip_leave_on_interrupt": true,
+  "leave_on_terminate": false
 }
